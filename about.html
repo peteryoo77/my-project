@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Musubu</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --deep-night:  #0b0c2a;
+      --twilight:    #1a1a4e;
+      --dusk-purple: #3d1f6e;
+      --magenta:     #c45c7a;
+      --blush:       #e89ab5;
+      --apricot:     #f4b87a;
+      --gold:        #ffd580;
+      --sky:         #9bc8e8;
+      --cloud-white: #fff8f4;
+      --text-light:  #fef3ec;
+      --text-muted:  #c8b8d0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--deep-night);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    /* ─── Nav ───────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      background: linear-gradient(to bottom, rgba(11,12,42,0.7), transparent);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      color: var(--cloud-white);
+      text-decoration: none;
+      text-shadow: 0 0 16px rgba(244,184,122,0.5);
+      transition: text-shadow 0.3s;
+    }
+    .nav-logo:hover { text-shadow: 0 0 28px rgba(244,184,122,0.9); }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0.7;
+      transition: opacity 0.3s, color 0.3s;
+    }
+    .nav-back:hover { opacity: 1; color: var(--gold); }
+    .nav-back::before {
+      content: '←';
+      font-size: 1rem;
+      transition: transform 0.3s;
+    }
+    .nav-back:hover::before { transform: translateX(-4px); }
+
+    /* ─── Page Header ───────────────────────────────────────────── */
+    .page-header {
+      position: relative;
+      width: 100%;
+      height: 72vh;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 100%, #9bc8e833 0%, transparent 60%),
+        radial-gradient(ellipse 55% 45% at 20% 85%,  #3d1f6e44 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 80% 80%,  #c45c7a28 0%, transparent 55%),
+        linear-gradient(
+          180deg,
+          #0b0c2a 0%,
+          #111336 15%,
+          #1e1552 30%,
+          #2e1c72 45%,
+          #4a2480 58%,
+          #7a3470 70%,
+          #a85068 80%,
+          #c87858 90%,
+          #e8b070 100%
+        );
+    }
+
+    /* Stars */
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+      opacity: 0;
+    }
+    @keyframes twinkle {
+      0%   { opacity: 0; transform: scale(0.6); }
+      100% { opacity: var(--op, 0.9); transform: scale(1.2); }
+    }
+
+    /* Clouds */
+    .clouds {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .cloud {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(var(--blur, 18px));
+      opacity: var(--op, 0.5);
+      animation: drift var(--speed, 40s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes drift {
+      0%   { transform: translate(0px, 0px); }
+      100% { transform: translate(var(--tx, 25px), var(--ty, -10px)); }
+    }
+
+    /* Horizontal light band at horizon */
+    .horizon-glow {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 40%;
+      background: linear-gradient(to top,
+        rgba(232,176,112,0.35) 0%,
+        rgba(200,120,88,0.18) 30%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Page header content */
+    .header-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 0 24px;
+      animation: fade-up 1.2s 0.2s ease forwards;
+      opacity: 0;
+    }
+    @keyframes fade-up {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .header-content { transform: translateY(24px); }
+
+    .header-kana {
+      font-size: clamp(0.65rem, 1.4vw, 0.8rem);
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--sky);
+      opacity: 0.75;
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    .header-title {
+      font-size: clamp(2.4rem, 7vw, 5.5rem);
+      font-weight: 400;
+      color: var(--cloud-white);
+      line-height: 1.08;
+      text-shadow:
+        0 0 40px rgba(155,200,232,0.5),
+        0 0 80px rgba(61,31,110,0.6),
+        0 2px 4px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
+    }
+    .header-title em {
+      display: block;
+      font-style: normal;
+      font-size: 0.55em;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, var(--sky) 0%, var(--blush) 60%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 8px;
+    }
+
+    .header-verse {
+      font-size: clamp(0.9rem, 2vw, 1.15rem);
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.8;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+
+    /* ─── Content Body ──────────────────────────────────────────── */
+    .content {
+      position: relative;
+      background: linear-gradient(180deg, #0b0c2a 0%, #0e0f2e 100%);
+      padding: 100px 24px 80px;
+      overflow: hidden;
+    }
+
+    /* Ambient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: orb-drift 10s ease-in-out infinite alternate;
+    }
+    .orb-a {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #9bc8e818 0%, transparent 70%);
+      top: 0; right: -10%;
+      animation-delay: -2s;
+    }
+    .orb-b {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #3d1f6e28 0%, transparent 70%);
+      top: 40%; left: -15%;
+      animation-delay: -5s;
+    }
+    .orb-c {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, #c45c7a20 0%, transparent 70%);
+      bottom: 5%; right: 10%;
+      animation-delay: -8s;
+    }
+    @keyframes orb-drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(15px, -25px) scale(1.1); }
+    }
+
+    .content-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    /* Section: Origin */
+    .section { margin-bottom: 96px; }
+
+    .section-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--blush);
+      opacity: 0.7;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-tag::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(232,154,181,0.3), transparent);
+    }
+
+    .section-heading {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 400;
+      color: var(--cloud-white);
+      line-height: 1.3;
+      margin-bottom: 28px;
+      text-shadow: 0 0 24px rgba(155,200,232,0.2);
+    }
+
+    .section-body {
+      font-size: 1.08rem;
+      line-height: 1.9;
+      color: var(--text-muted);
+    }
+    .section-body p + p { margin-top: 18px; }
+    .section-body em { color: var(--blush); font-style: italic; }
+
+    /* Divider */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(155,200,232,0.25), rgba(196,92,122,0.25), transparent);
+      margin: 0 auto 96px;
+    }
+
+    /* Thread cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .card {
+      position: relative;
+      padding: 32px 28px;
+      border: 1px solid rgba(255,245,220,0.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      overflow: hidden;
+      transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
+    }
+    .card:hover {
+      border-color: rgba(255,245,220,0.2);
+      box-shadow: 0 0 40px rgba(155,200,232,0.1);
+      transform: translateY(-4px);
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--grad);
+      opacity: 0.6;
+    }
+    .card-glyph {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+    .card-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cloud-white);
+      margin-bottom: 12px;
+      opacity: 0.85;
+    }
+    .card-text {
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Quote block */
+    .quote-block {
+      margin: 80px auto;
+      max-width: 640px;
+      text-align: center;
+      position: relative;
+    }
+    .quote-block::before, .quote-block::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(244,184,122,0.5));
+      margin: 0 auto 28px;
+    }
+    .quote-block::after {
+      background: linear-gradient(to left, transparent, rgba(244,184,122,0.5));
+      margin: 28px auto 0;
+    }
+    .quote-text {
+      font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--cloud-white);
+      text-shadow: 0 0 30px rgba(244,184,122,0.3);
+    }
+    .quote-attr {
+      display: block;
+      margin-top: 20px;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      position: relative;
+      background: linear-gradient(180deg, #0b0c2a 0%, #06060f 100%);
+      padding: 56px 24px 36px;
+      text-align: center;
+      overflow: hidden;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(196,92,122,0.35), rgba(244,184,122,0.35), transparent);
+    }
+    .footer-logo {
+      font-size: 1.5rem;
+      letter-spacing: 0.12em;
+      color: var(--cloud-white);
+      text-shadow: 0 0 20px rgba(244,184,122,0.4);
+      margin-bottom: 14px;
+    }
+    .footer-tagline {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: var(--text-muted);
+      opacity: 0.55;
+      margin-bottom: 32px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      list-style: none;
+      margin-bottom: 36px;
+    }
+    .footer-links a {
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0.55;
+      transition: opacity 0.3s, color 0.3s;
+    }
+    .footer-links a:hover { opacity: 1; color: var(--gold); }
+    .footer-copy {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      opacity: 0.3;
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── Reveal on scroll ──────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.85s ease, transform 0.85s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      nav { padding: 20px 24px; }
+      .cards { grid-template-columns: 1fr; gap: 16px; }
+      .footer-links { flex-wrap: wrap; gap: 16px; }
+    }
+    @media (max-width: 420px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAV ════════════════════════════════════ -->
+<nav>
+  <a href="index.html" class="nav-logo">結 &nbsp;Musubu</a>
+  <a href="index.html" class="nav-back">Home</a>
+</nav>
+
+<!-- ═══════════════════════ PAGE HEADER ═══════════════════════════ -->
+<header class="page-header" id="top">
+  <div class="stars" id="stars"></div>
+  <div class="clouds" id="clouds"></div>
+  <div class="horizon-glow"></div>
+
+  <div class="header-content">
+    <span class="header-kana">むすぶ &nbsp;·&nbsp; to tie &nbsp;·&nbsp; to connect</span>
+    <h1 class="header-title">
+      About Musubu
+      <em>The story behind the thread</em>
+    </h1>
+    <p class="header-verse">
+      We are all searching for something we cannot name —<br>
+      a colour in the sky, a voice in the distance, a thread pulling back.
+    </p>
+  </div>
+</header>
+
+<!-- ═══════════════════════ CONTENT ═══════════════════════════════ -->
+<main class="content">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+
+  <div class="content-inner">
+
+    <!-- Origin -->
+    <section class="section reveal">
+      <p class="section-tag">Origin</p>
+      <h2 class="section-heading">A word woven into the sky</h2>
+      <div class="section-body">
+        <p>
+          <em>Musubu</em> — 結ぶ — is a Japanese verb that carries more weight than its translation allows.
+          It means to tie, to bind, to knot. But it also means to bear fruit, to form a bond, to make real
+          something that was only felt before.
+        </p>
+        <p>
+          In the old stories, a red thread connects two people across any distance, any time, any forgetting.
+          You may not know the face at the other end. You may not remember the moment it was tied.
+          But it holds — through sleep and waking, through years and silence, through every sky you have ever stood beneath.
+        </p>
+        <p>
+          Musubu was built from that feeling — the quiet certainty that somewhere, someone is looking at the same light,
+          breathing the same dusk air, and searching for the same thing you are.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider reveal"></div>
+
+    <!-- Three pillars -->
+    <section class="section reveal">
+      <p class="section-tag">What we believe</p>
+      <h2 class="section-heading">Three threads that hold us together</h2>
+      <div class="cards">
+        <div class="card reveal" style="--grad: linear-gradient(90deg, #9bc8e8, #6aaed4); transition-delay: 0.1s;">
+          <span class="card-glyph" style="color: var(--sky);">空</span>
+          <p class="card-title">Sky</p>
+          <p class="card-text">Every sky is shared. No matter where you stand, the light that reaches you has touched someone else first. Distance is an illusion the clouds see through.</p>
+        </div>
+        <div class="card reveal" style="--grad: linear-gradient(90deg, #c45c7a, #e89ab5); transition-delay: 0.2s;">
+          <span class="card-glyph" style="color: var(--blush);">糸</span>
+          <p class="card-title">Thread</p>
+          <p class="card-text">Connection is not made — it is remembered. The thread exists before the meeting, before the name, before the first word. We only find what was already tied.</p>
+        </div>
+        <div class="card reveal" style="--grad: linear-gradient(90deg, #f4b87a, #ffd580); transition-delay: 0.3s;">
+          <span class="card-glyph" style="color: var(--gold);">夕</span>
+          <p class="card-title">Dusk</p>
+          <p class="card-text">Kataware-doki — the twilight between day and night — is the hour when the boundary between here and there grows thin. Some meetings can only happen at dusk.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote -->
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "The light of a star you see tonight left its source a thousand years ago.
+        Perhaps longing works the same way — sent long before we knew we were sending it."
+      </p>
+      <span class="quote-attr">— Musubu, fragment I</span>
+    </div>
+
+    <div class="divider reveal"></div>
+
+    <!-- Closing -->
+    <section class="section reveal" style="text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;">
+      <p class="section-tag" style="justify-content: center;">An invitation</p>
+      <h2 class="section-heading">Come and look at the sky</h2>
+      <div class="section-body">
+        <p>
+          You do not need to understand everything to begin.
+          You only need to stand somewhere and look up —
+          and trust that someone, pulled by the same invisible thread,
+          is looking up too.
+        </p>
+      </div>
+      <a href="index.html" style="
+        display: inline-block;
+        margin-top: 44px;
+        padding: 15px 40px;
+        border: 1.5px solid rgba(253,232,176,0.4);
+        border-radius: 50px;
+        color: var(--cloud-white);
+        text-decoration: none;
+        font-size: 0.85rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 0 20px rgba(244,184,122,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+        transition: all 0.4s ease;
+      " onmouseover="this.style.background='rgba(244,184,122,0.15)';this.style.borderColor='rgba(253,232,176,0.8)';this.style.boxShadow='0 0 40px rgba(244,184,122,0.4),inset 0 1px 0 rgba(255,255,255,0.15)';this.style.transform='translateY(-2px)'"
+         onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(253,232,176,0.4)';this.style.boxShadow='0 0 20px rgba(244,184,122,0.2),inset 0 1px 0 rgba(255,255,255,0.1)';this.style.transform='translateY(0)'">
+        Return to the Sky
+      </a>
+    </section>
+
+  </div>
+</main>
+
+<!-- ═══════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">結 &nbsp;Musubu</div>
+  <p class="footer-tagline">"Even if we forget each other's names, the thread remains."</p>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">World</a></li>
+    <li><a href="#">Gallery</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <p class="footer-copy">&copy; 2026 Musubu. Crafted with longing, at dusk.</p>
+</footer>
+
+<script>
+  /* ─── Stars ───────────────────────────────────────────────────── */
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 130; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.2 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random() * 65}%; left:${Math.random() * 100}%;
+      --d:${2 + Math.random() * 4}s;
+      --delay:${-Math.random() * 4}s;
+      --op:${0.35 + Math.random() * 0.65};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  /* ─── Clouds ──────────────────────────────────────────────────── */
+  const cloudsEl = document.getElementById('clouds');
+  [
+    { w:320, h:85,  top:55, left:0,   blur:22, op:0.45, tx:35,  ty:-10, speed:38 },
+    { w:260, h:65,  top:62, left:50,  blur:18, op:0.38, tx:-28, ty:-7,  speed:44 },
+    { w:400, h:100, top:50, left:18,  blur:28, op:0.30, tx:20,  ty:-15, speed:52 },
+    { w:180, h:50,  top:68, left:72,  blur:14, op:0.35, tx:-18, ty:-5,  speed:32 },
+    { w:300, h:75,  top:74, left:-4,  blur:20, op:0.28, tx:30,  ty:-8,  speed:48 },
+  ].forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'cloud';
+    const hue = 200 + Math.random() * 40;
+    el.style.cssText = `
+      width:${c.w}px; height:${c.h}px;
+      top:${c.top}%; left:${c.left}%;
+      background: radial-gradient(ellipse, hsla(${hue},50%,88%,0.85) 0%, transparent 70%);
+      --blur:${c.blur}px; --op:${c.op};
+      --tx:${c.tx}px; --ty:${c.ty}px;
+      --speed:${c.speed}s; --delay:${-i * 6}s;
+    `;
+    cloudsEl.appendChild(el);
+  });
+
+  /* ─── Scroll reveal ───────────────────────────────────────────── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
