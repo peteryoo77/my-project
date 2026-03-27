@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lost Between Worlds — Musubu</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    /* ─── Full-page sky hero ─────────────────────────────────── */
+    .lost-hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 100%, #9bc8e828 0%, transparent 60%),
+        radial-gradient(ellipse 55% 45% at 20% 85%,  #4a0a5e40 0%, transparent 55%),
+        linear-gradient(
+          180deg,
+          #020408 0%,
+          #06091a 12%,
+          #0c0e30 25%,
+          #161050 38%,
+          #2a1460 50%,
+          #4a1e72 62%,
+          #7a3468 74%,
+          #a85860 84%,
+          #d08870 92%,
+          #f0c088 100%
+        );
+    }
+
+    /* Stars */
+    .stars { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s); opacity: 0;
+    }
+    @keyframes twinkle {
+      0%   { opacity: 0; transform: scale(0.6); }
+      100% { opacity: var(--op, 0.9); transform: scale(1.2); }
+    }
+
+    /* Drifting clouds */
+    .clouds { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .cloud {
+      position: absolute; border-radius: 50%;
+      filter: blur(var(--blur, 18px));
+      opacity: var(--op, 0.4);
+      animation: drift var(--speed, 40s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes drift {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(var(--tx, 25px), var(--ty, -10px)); }
+    }
+
+    .horizon-glow {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+      background: linear-gradient(to top, rgba(240,192,136,0.28) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* A drifting disconnected red thread */
+    .lost-thread {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%) rotate(25deg);
+      width: 2px;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, #e84040 30%, #e84040 70%, transparent);
+      filter: blur(0.5px);
+      animation: thread-drift 8s ease-in-out infinite alternate;
+      opacity: 0.6;
+    }
+    @keyframes thread-drift {
+      0%   { transform: translate(-50%, -50%) rotate(20deg) translateY(0); opacity: 0.6; }
+      50%  { transform: translate(-50%, -50%) rotate(30deg) translateY(-20px); opacity: 0.9; }
+      100% { transform: translate(-50%, -50%) rotate(15deg) translateY(10px); opacity: 0.5; }
+    }
+
+    /* ─── Content ────────────────────────────────────────────── */
+    .lost-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 0 24px;
+      animation: fade-up 1.4s 0.1s ease forwards;
+      opacity: 0;
+      transform: translateY(28px);
+    }
+
+    .lost-code {
+      font-size: clamp(5rem, 18vw, 12rem);
+      font-weight: 400;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--blush) 50%, var(--sky) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 40px rgba(244,184,122,0.3));
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .lost-kana {
+      font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 28px;
+    }
+
+    .lost-title {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 400;
+      color: var(--cloud-white);
+      text-shadow: 0 0 30px rgba(196,92,122,0.4), 0 2px 4px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .lost-text {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 460px;
+      margin: 0 auto 44px;
+      line-height: 1.85;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+    }
+
+    .lost-cta {
+      display: inline-block;
+      padding: 15px 40px;
+      border: 1.5px solid rgba(253,232,176,0.45);
+      border-radius: 50px;
+      color: var(--cloud-white);
+      text-decoration: none;
+      font-size: 0.88rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 0 20px rgba(244,184,122,0.2), inset 0 1px 0 rgba(255,255,255,0.12);
+      transition: all 0.4s ease;
+    }
+    .lost-cta:hover {
+      background: rgba(244,184,122,0.16);
+      border-color: rgba(253,232,176,0.85);
+      box-shadow: 0 0 40px rgba(244,184,122,0.4), inset 0 1px 0 rgba(255,255,255,0.18);
+      transform: translateY(-2px);
+    }
+
+    /* Fade-in nav */
+    .nav-logo, .nav-links a {
+      animation: fade-up 1.2s 0.1s ease forwards;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading-screen">
+  <div class="loading-logo">結 &nbsp;Musubu</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<!-- Progress + back-to-top -->
+<div id="scroll-progress"></div>
+<button id="back-to-top" aria-label="Back to top">↑</button>
+
+<!-- ═══════════════════════ NAV ════════════════════════════════ -->
+<nav>
+  <a href="index.html" class="nav-logo">結 &nbsp;Musubu</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════ HERO ══════════════════════════════ -->
+<section class="lost-hero">
+  <div class="stars"  id="stars"></div>
+  <div class="clouds" id="clouds"></div>
+  <div class="horizon-glow"></div>
+  <div class="lost-thread"></div>
+
+  <div class="lost-content">
+    <div class="lost-code">404</div>
+    <p class="lost-kana">迷子になった &nbsp;·&nbsp; Lost between worlds</p>
+    <h1 class="lost-title">The thread leads nowhere here</h1>
+    <p class="lost-text">
+      This page drifted beyond the horizon —
+      carried away by the same wind that moves the clouds.
+      The sky you were looking for does not exist at this address.
+    </p>
+    <a href="index.html" class="lost-cta">Return to the Sky</a>
+  </div>
+</section>
+
+<script>
+  /* ─── Stars ────────────────────────────────────────────────── */
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 180; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.4;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random() * 70}%; left:${Math.random() * 100}%;
+      --d:${2 + Math.random() * 4}s;
+      --delay:${-Math.random() * 5}s;
+      --op:${0.35 + Math.random() * 0.65};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  /* ─── Clouds ───────────────────────────────────────────────── */
+  const cloudsEl = document.getElementById('clouds');
+  [
+    { w:320, h:85,  top:58, left:0,   blur:22, op:0.38, tx:30,  ty:-12, speed:38 },
+    { w:260, h:65,  top:65, left:52,  blur:18, op:0.32, tx:-25, ty:-8,  speed:45 },
+    { w:400, h:100, top:52, left:18,  blur:28, op:0.26, tx:22,  ty:-16, speed:54 },
+    { w:190, h:50,  top:70, left:72,  blur:14, op:0.30, tx:-16, ty:-5,  speed:32 },
+    { w:300, h:75,  top:76, left:-5,  blur:20, op:0.24, tx:28,  ty:-9,  speed:48 },
+  ].forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'cloud';
+    const hue = 220 + Math.random() * 40;
+    el.style.cssText = `
+      width:${c.w}px; height:${c.h}px;
+      top:${c.top}%; left:${c.left}%;
+      background:radial-gradient(ellipse, hsla(${hue},40%,85%,0.8) 0%, transparent 70%);
+      --blur:${c.blur}px; --op:${c.op};
+      --tx:${c.tx}px; --ty:${c.ty}px;
+      --speed:${c.speed}s; --delay:${-i * 7}s;
+    `;
+    cloudsEl.appendChild(el);
+  });
+</script>
+<script src="shared.js"></script>
+</body>
+</html>
