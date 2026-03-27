@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Musubu — Where Threads Connect</title>
+  <link rel="stylesheet" href="nav.css" />
   <style>
     /* ─── Reset & Base ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,47 +34,11 @@
     }
 
     /* ─── Nav ───────────────────────────────────────────────────── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 24px 48px;
-      background: linear-gradient(to bottom, rgba(11,12,42,0.65), transparent);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      pointer-events: none;
-    }
-    nav a { pointer-events: all; }
-
-    .nav-logo {
-      font-size: 1.1rem;
-      letter-spacing: 0.2em;
-      color: var(--cloud-white);
-      text-decoration: none;
-      text-shadow: 0 0 16px rgba(244,184,122,0.5);
-      transition: text-shadow 0.3s;
+    /* ─── Hero nav fade-in (index-only) ───────────────────────── */
+    .nav-logo,
+    .nav-links a {
       animation: fade-up 1.4s 0.1s ease forwards;
       opacity: 0;
-    }
-    .nav-logo:hover { text-shadow: 0 0 28px rgba(244,184,122,0.9); }
-
-    .nav-about {
-      text-decoration: none;
-      font-size: 0.75rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      opacity: 0;
-      transition: color 0.3s;
-      animation: fade-up 1.4s 0.1s ease forwards;
-    }
-    .nav-about:hover { color: var(--gold); opacity: 1 !important; }
-
-    @media (max-width: 480px) {
-      nav { padding: 18px 24px; }
     }
 
     /* ─── Hero ─────────────────────────────────────────────────── */
@@ -581,10 +546,11 @@
 
 <!-- ═══════════════════════ NAV ════════════════════════════════════ -->
 <nav>
-  <a href="#" class="nav-logo">結 &nbsp;Musubu</a>
-  <ul style="display:flex;gap:24px;list-style:none;">
-    <li><a href="about.html" class="nav-about">About</a></li>
-    <li><a href="gallery.html" class="nav-about">Gallery</a></li>
+  <a href="index.html" class="nav-logo">結 &nbsp;Musubu</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
   </ul>
 </nav>
 
