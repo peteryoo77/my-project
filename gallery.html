@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Musubu</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --deep-night:  #0b0c2a;
+      --twilight:    #1a1a4e;
+      --dusk-purple: #3d1f6e;
+      --magenta:     #c45c7a;
+      --blush:       #e89ab5;
+      --apricot:     #f4b87a;
+      --gold:        #ffd580;
+      --sky:         #9bc8e8;
+      --cloud-white: #fff8f4;
+      --text-light:  #fef3ec;
+      --text-muted:  #c8b8d0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--deep-night);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    /* ─── Nav ───────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      background: linear-gradient(to bottom, rgba(11,12,42,0.75), transparent);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      color: var(--cloud-white);
+      text-decoration: none;
+      text-shadow: 0 0 16px rgba(244,184,122,0.5);
+      transition: text-shadow 0.3s;
+    }
+    .nav-logo:hover { text-shadow: 0 0 28px rgba(244,184,122,0.9); }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0.65;
+      transition: opacity 0.3s, color 0.3s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { opacity: 1; color: var(--gold); }
+
+    @media (max-width: 480px) {
+      nav { padding: 18px 20px; }
+      .nav-links { gap: 18px; }
+    }
+
+    /* ─── Page Header ───────────────────────────────────────────── */
+    .page-header {
+      position: relative;
+      width: 100%;
+      height: 56vh;
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 65% 50% at 50% 100%, #f4b87a33 0%, transparent 60%),
+        radial-gradient(ellipse 50% 45% at 25% 85%,  #c45c7a28 0%, transparent 55%),
+        radial-gradient(ellipse 55% 50% at 75% 80%,  #6b2fa033 0%, transparent 55%),
+        linear-gradient(
+          180deg,
+          #0b0c2a 0%,
+          #141436 14%,
+          #231860 28%,
+          #3c2278 42%,
+          #6b2e82 56%,
+          #9b4070 68%,
+          #c46860 80%,
+          #e8a870 90%,
+          #f8d090 100%
+        );
+    }
+
+    .stars {
+      position: absolute; inset: 0;
+      pointer-events: none; overflow: hidden;
+    }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s); opacity: 0;
+    }
+    @keyframes twinkle {
+      0%   { opacity: 0; transform: scale(0.6); }
+      100% { opacity: var(--op, 0.9); transform: scale(1.2); }
+    }
+
+    .clouds {
+      position: absolute; inset: 0;
+      pointer-events: none; overflow: hidden;
+    }
+    .cloud {
+      position: absolute; border-radius: 50%;
+      filter: blur(var(--blur, 18px));
+      opacity: var(--op, 0.45);
+      animation: drift var(--speed, 40s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes drift {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(var(--tx, 25px), var(--ty, -10px)); }
+    }
+
+    .horizon-glow {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
+      background: linear-gradient(to top, rgba(248,208,144,0.3) 0%, rgba(200,104,96,0.12) 35%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative; z-index: 10;
+      text-align: center; padding: 0 24px;
+      animation: fade-up 1.2s 0.2s ease forwards;
+      opacity: 0; transform: translateY(24px);
+    }
+    @keyframes fade-up {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-kana {
+      display: block;
+      font-size: clamp(0.65rem, 1.4vw, 0.8rem);
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+    .header-title {
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      font-weight: 400;
+      color: var(--cloud-white);
+      line-height: 1.08;
+      text-shadow:
+        0 0 40px rgba(244,184,122,0.5),
+        0 0 80px rgba(196,92,122,0.3),
+        0 2px 4px rgba(0,0,0,0.4);
+      margin-bottom: 16px;
+    }
+    .header-title em {
+      display: block;
+      font-style: normal;
+      font-size: 0.48em;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--blush) 55%, var(--sky) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 6px;
+    }
+
+    /* ─── Gallery Section ───────────────────────────────────────── */
+    .gallery-section {
+      position: relative;
+      background: linear-gradient(180deg, #0b0c2a 0%, #0d0e2e 50%, #0b0c2a 100%);
+      padding: 80px 40px 100px;
+      overflow: hidden;
+    }
+
+    /* Ambient orbs */
+    .orb {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      animation: orb-pulse 9s ease-in-out infinite alternate;
+    }
+    .orb-1 { width:700px; height:700px; background:radial-gradient(circle,#3d1f6e22 0%,transparent 70%); top:-10%; left:-15%; animation-delay:0s; }
+    .orb-2 { width:500px; height:500px; background:radial-gradient(circle,#c45c7a18 0%,transparent 70%); top:30%; right:-12%; animation-delay:-5s; }
+    .orb-3 { width:600px; height:600px; background:radial-gradient(circle,#1a4e6e18 0%,transparent 70%); bottom:0; left:25%; animation-delay:-3s; }
+    @keyframes orb-pulse {
+      0%   { transform: scale(1) translate(0,0); opacity:0.7; }
+      100% { transform: scale(1.12) translate(18px,-18px); opacity:1; }
+    }
+
+    .gallery-intro {
+      position: relative; z-index: 2;
+      max-width: 600px; margin: 0 auto 56px; text-align: center;
+    }
+    .gallery-label {
+      font-size: 0.7rem; letter-spacing: 0.45em; text-transform: uppercase;
+      color: var(--blush); opacity: 0.7; margin-bottom: 14px;
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+    }
+    .gallery-label::before, .gallery-label::after {
+      content: '';
+      width: 40px; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(232,154,181,0.4));
+    }
+    .gallery-label::after { background: linear-gradient(to left, transparent, rgba(232,154,181,0.4)); }
+    .gallery-desc {
+      font-size: 1rem; font-style: italic; line-height: 1.8;
+      color: var(--text-muted);
+    }
+
+    /* ─── Grid ──────────────────────────────────────────────────── */
+    .grid {
+      position: relative; z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    /* Skeleton loader */
+    .grid-item.skeleton {
+      background: linear-gradient(
+        110deg,
+        #1a1a3e 30%,
+        #252550 50%,
+        #1a1a3e 70%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .grid-item {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #1a1a3e;
+      cursor: pointer;
+      transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  box-shadow 0.45s ease;
+      opacity: 0;
+      animation: item-in 0.6s ease forwards;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes item-in {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+
+    /* Character name overlay */
+    .grid-item .name-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 28px 12px 12px;
+      background: linear-gradient(to top, rgba(11,12,42,0.85) 0%, transparent 100%);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--cloud-white);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+      z-index: 3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .grid-item:hover .name-overlay {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .grid-item:hover {
+      transform: scale(1.05) translateY(-4px);
+      box-shadow:
+        0 0 24px rgba(196, 92, 122, 0.35),
+        0 0 48px rgba(91, 38, 130, 0.25),
+        0 8px 32px rgba(0,0,0,0.5);
+      z-index: 10;
+    }
+
+    .grid-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.45s ease;
+      filter: saturate(0.85) brightness(0.92);
+    }
+    .grid-item:hover img {
+      transform: scale(1.1);
+      filter: saturate(1.1) brightness(1.05);
+    }
+
+    /* Overlay shimmer on hover */
+    .grid-item::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(244,184,122,0) 0%,
+        rgba(196,92,122,0.12) 50%,
+        rgba(155,200,232,0) 100%
+      );
+      opacity: 0;
+      transition: opacity 0.45s ease;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+    .grid-item:hover::after { opacity: 1; }
+
+    /* Inner border glow ring */
+    .grid-item::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      border: 1px solid rgba(255,245,220,0);
+      transition: border-color 0.45s ease;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .grid-item:hover::before { border-color: rgba(255,245,220,0.2); }
+
+    /* ─── Responsive grid ───────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: repeat(5, 1fr); }
+    }
+    @media (max-width: 880px) {
+      .grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      .gallery-section { padding: 60px 24px 80px; }
+    }
+    @media (max-width: 620px) {
+      .grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    }
+    @media (max-width: 400px) {
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 7px; }
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      position: relative;
+      background: linear-gradient(180deg, #0b0c2a 0%, #06060f 100%);
+      padding: 56px 24px 36px;
+      text-align: center;
+      overflow: hidden;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(196,92,122,0.35), rgba(244,184,122,0.35), transparent);
+    }
+    .footer-logo {
+      font-size: 1.5rem; letter-spacing: 0.12em;
+      color: var(--cloud-white);
+      text-shadow: 0 0 20px rgba(244,184,122,0.4);
+      margin-bottom: 14px;
+    }
+    .footer-tagline {
+      font-size: 0.82rem; font-style: italic;
+      color: var(--text-muted); opacity: 0.55; margin-bottom: 32px;
+    }
+    .footer-links {
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 28px; list-style: none; margin-bottom: 36px;
+    }
+    .footer-links a {
+      text-decoration: none; font-size: 0.75rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-muted); opacity: 0.55;
+      transition: opacity 0.3s, color 0.3s;
+    }
+    .footer-links a:hover { opacity: 1; color: var(--gold); }
+    .footer-copy {
+      font-size: 0.68rem; color: var(--text-muted); opacity: 0.3; letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAV ════════════════════════════════════ -->
+<nav>
+  <a href="index.html" class="nav-logo">結 &nbsp;Musubu</a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html" class="active">Gallery</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════ PAGE HEADER ═══════════════════════════ -->
+<header class="page-header">
+  <div class="stars" id="stars"></div>
+  <div class="clouds" id="clouds"></div>
+  <div class="horizon-glow"></div>
+
+  <div class="header-content">
+    <span class="header-kana">光の欠片 &nbsp;·&nbsp; Fragments of Light</span>
+    <h1 class="header-title">
+      Gallery
+      <em>Moments suspended in time</em>
+    </h1>
+  </div>
+</header>
+
+<!-- ═══════════════════════ GALLERY ═══════════════════════════════ -->
+<section class="gallery-section">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="gallery-intro">
+    <p class="gallery-label">36 frames</p>
+    <p class="gallery-desc">Every image is a thread. Every thread connects two moments — the one you remember and the one you are about to forget.</p>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">結 &nbsp;Musubu</div>
+  <p class="footer-tagline">"Even if we forget each other's names, the thread remains."</p>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="#">Fragments</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <p class="footer-copy">&copy; 2026 Musubu. Crafted with longing, at dusk.</p>
+</footer>
+
+<script>
+  /* ─── Stars ───────────────────────────────────────────────────── */
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 110; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.2 + 0.4;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random() * 65}%; left:${Math.random() * 100}%;
+      --d:${2 + Math.random() * 4}s;
+      --delay:${-Math.random() * 5}s;
+      --op:${0.35 + Math.random() * 0.65};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  /* ─── Clouds ──────────────────────────────────────────────────── */
+  const cloudsEl = document.getElementById('clouds');
+  [
+    { w:300, h:80,  top:55, left:0,   blur:20, op:0.40, tx:30,  ty:-10, speed:36 },
+    { w:240, h:60,  top:62, left:48,  blur:16, op:0.35, tx:-25, ty:-7,  speed:44 },
+    { w:380, h:95,  top:50, left:20,  blur:26, op:0.28, tx:22,  ty:-14, speed:52 },
+    { w:200, h:55,  top:68, left:70,  blur:14, op:0.33, tx:-18, ty:-5,  speed:30 },
+    { w:280, h:70,  top:72, left:-4,  blur:18, op:0.26, tx:28,  ty:-8,  speed:46 },
+  ].forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'cloud';
+    const hue = 25 + Math.random() * 20;
+    el.style.cssText = `
+      width:${c.w}px; height:${c.h}px;
+      top:${c.top}%; left:${c.left}%;
+      background:radial-gradient(ellipse, hsla(${hue},75%,90%,0.85) 0%, transparent 70%);
+      --blur:${c.blur}px; --op:${c.op};
+      --tx:${c.tx}px; --ty:${c.ty}px;
+      --speed:${c.speed}s; --delay:${-i * 7}s;
+    `;
+    cloudsEl.appendChild(el);
+  });
+
+  /* ─── Build Grid ──────────────────────────────────────────────── */
+  const TOTAL = 36;
+  const grid  = document.getElementById('grid');
+
+  // Pre-fill grid with skeleton placeholders
+  for (let i = 0; i < TOTAL; i++) {
+    const item = document.createElement('div');
+    item.className = 'grid-item skeleton';
+    item.style.setProperty('--delay', `${i * 0.04}s`);
+    grid.appendChild(item);
+  }
+
+  // Fetch top anime characters from Jikan (MyAnimeList public API)
+  // Two pages of 25 → slice to 36
+  async function loadCharacters() {
+    try {
+      const [p1, p2] = await Promise.all([
+        fetch('https://api.jikan.moe/v4/top/characters?limit=25&page=1').then(r => r.json()),
+        fetch('https://api.jikan.moe/v4/top/characters?limit=25&page=2').then(r => r.json()),
+      ]);
+
+      const chars = [...(p1.data || []), ...(p2.data || [])].slice(0, TOTAL);
+      const placeholders = grid.querySelectorAll('.grid-item');
+
+      chars.forEach((char, i) => {
+        const item = placeholders[i];
+        item.classList.remove('skeleton');
+
+        const img = document.createElement('img');
+        img.src    = char.images?.jpg?.image_url || char.images?.webp?.image_url || '';
+        img.alt    = char.name || `Character ${i + 1}`;
+        img.loading  = 'lazy';
+        img.decoding = 'async';
+
+        // Add name overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'name-overlay';
+        overlay.textContent = char.name || '';
+
+        item.appendChild(img);
+        item.appendChild(overlay);
+      });
+
+    } catch (err) {
+      // On failure, fall back to numbered placeholders so layout still holds
+      console.warn('Jikan API unavailable:', err);
+    }
+  }
+
+  loadCharacters();
+</script>
+</body>
+</html>
