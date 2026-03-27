@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Musubu — Where Threads Connect</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --deep-night:    #0b0c2a;
+      --twilight:      #1a1a4e;
+      --dusk-purple:   #3d1f6e;
+      --magenta:       #c45c7a;
+      --blush:         #e89ab5;
+      --apricot:       #f4b87a;
+      --gold:          #ffd580;
+      --sky:           #9bc8e8;
+      --pale-sky:      #d6ecf8;
+      --cloud-white:   #fff8f4;
+      --text-light:    #fef3ec;
+      --text-muted:    #c8b8d0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--deep-night);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    /* ─── Hero ─────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 100%, #f4b87a44 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 30% 80%,  #c45c7a33 0%, transparent 55%),
+        radial-gradient(ellipse 70% 60% at 70% 75%,  #9b6fd433 0%, transparent 55%),
+        linear-gradient(
+          180deg,
+          #0b0c2a 0%,
+          #1a1a4e 18%,
+          #2e1760 35%,
+          #5b2682 50%,
+          #9b3f72 62%,
+          #c85c6a 72%,
+          #e8956a 82%,
+          #f4c77a 90%,
+          #fde8b0 100%
+        );
+    }
+
+    /* Stars */
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+      opacity: 0;
+    }
+    @keyframes twinkle {
+      0%   { opacity: 0; transform: scale(0.6); }
+      100% { opacity: var(--op, 0.9); transform: scale(1.2); }
+    }
+
+    /* Light rays */
+    .rays {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200%;
+      height: 85%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .ray {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      transform-origin: bottom center;
+      background: linear-gradient(to top, #fde8b0cc 0%, #f4b87a55 30%, transparent 80%);
+      filter: blur(6px);
+      animation: ray-breathe 6s ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+      opacity: var(--op, 0.4);
+    }
+    @keyframes ray-breathe {
+      0%   { opacity: var(--op, 0.4); transform: translateX(-50%) rotate(var(--rot)) scaleX(1); }
+      100% { opacity: calc(var(--op, 0.4) * 1.6); transform: translateX(-50%) rotate(var(--rot)) scaleX(1.5); }
+    }
+
+    /* Clouds */
+    .clouds {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .cloud {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(var(--blur, 18px));
+      opacity: var(--op, 0.55);
+      animation: float-cloud var(--speed, 40s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes float-cloud {
+      0%   { transform: translate(0px, 0px) scale(1); }
+      50%  { transform: translate(var(--tx, 30px), var(--ty, -15px)) scale(1.04); }
+      100% { transform: translate(calc(var(--tx, 30px) * 0.3), var(--ty2, 10px)) scale(0.97); }
+    }
+
+    /* ─── Hero Content ──────────────────────────────────────────── */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 0 24px;
+      animation: fade-up 1.4s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    @keyframes fade-up {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow {
+      font-family: 'Georgia', serif;
+      font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      opacity: 0.85;
+      animation: fade-up 1.4s 0.2s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-title {
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--cloud-white);
+      text-shadow:
+        0 0 40px rgba(244, 184, 122, 0.6),
+        0 0 80px rgba(196, 92, 122, 0.4),
+        0 2px 4px rgba(0,0,0,0.3);
+      animation: fade-up 1.4s 0.35s ease forwards;
+      opacity: 0;
+      margin-bottom: 12px;
+    }
+    .hero-title span {
+      display: block;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--blush) 50%, var(--sky) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-muted);
+      margin: 18px auto 40px;
+      max-width: 520px;
+      line-height: 1.75;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+      animation: fade-up 1.4s 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      padding: 16px 44px;
+      border: 1.5px solid rgba(253, 232, 176, 0.5);
+      border-radius: 50px;
+      color: var(--cloud-white);
+      text-decoration: none;
+      font-size: 0.95rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow:
+        0 0 20px rgba(244, 184, 122, 0.25),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+      transition: all 0.4s ease;
+      animation: fade-up 1.4s 0.65s ease forwards;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .hero-cta:hover {
+      background: rgba(244, 184, 122, 0.18);
+      border-color: rgba(253, 232, 176, 0.9);
+      box-shadow:
+        0 0 40px rgba(244, 184, 122, 0.45),
+        0 0 80px rgba(196, 92, 122, 0.2),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+      letter-spacing: 0.22em;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.5;
+      animation: fade-up 1.4s 1.2s ease forwards, bob 2.5s 2.6s ease-in-out infinite;
+      opacity: 0;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+
+    /* ─── About Section ─────────────────────────────────────────── */
+    .about {
+      position: relative;
+      background: linear-gradient(180deg, #0b0c2a 0%, #110e30 50%, #0b0c2a 100%);
+      padding: 120px 24px;
+      overflow: hidden;
+    }
+    .about::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      right: 0;
+      height: 180px;
+      background: linear-gradient(to bottom, #fde8b022, transparent);
+      pointer-events: none;
+    }
+
+    /* Ambient glow orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: orb-pulse 8s ease-in-out infinite alternate;
+    }
+    .orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #5b268250 0%, transparent 70%);
+      top: 10%; left: -15%;
+      animation-delay: 0s;
+    }
+    .orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #c45c7a30 0%, transparent 70%);
+      top: 30%; right: -10%;
+      animation-delay: -4s;
+    }
+    .orb-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #1a6e9b28 0%, transparent 70%);
+      bottom: 5%; left: 30%;
+      animation-delay: -2s;
+    }
+    @keyframes orb-pulse {
+      0%   { transform: scale(1) translate(0, 0); opacity: 0.6; }
+      100% { transform: scale(1.15) translate(20px, -20px); opacity: 1; }
+    }
+
+    .about-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--blush);
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .about-heading {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.25;
+      color: var(--cloud-white);
+      text-shadow: 0 0 30px rgba(196, 92, 122, 0.3);
+      margin-bottom: 28px;
+    }
+
+    .about-text {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .about-text + .about-text { margin-top: 16px; }
+
+    .about-visual {
+      position: relative;
+      height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Shinkai-style abstract window / comet visual */
+    .visual-frame {
+      width: 240px;
+      height: 300px;
+      border: 1px solid rgba(255, 245, 220, 0.15);
+      border-radius: 120px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(
+        160deg,
+        #1a1a4e 0%,
+        #3d1f6e 30%,
+        #8b3a6a 55%,
+        #d4856a 75%,
+        #f4c77a 90%
+      );
+      box-shadow:
+        0 0 60px rgba(196, 92, 122, 0.3),
+        0 0 120px rgba(91, 38, 130, 0.2),
+        inset 0 0 60px rgba(0,0,0,0.3);
+      animation: frame-breathe 6s ease-in-out infinite alternate;
+    }
+    @keyframes frame-breathe {
+      0%   { box-shadow: 0 0 60px rgba(196,92,122,0.3), 0 0 120px rgba(91,38,130,0.2), inset 0 0 60px rgba(0,0,0,0.3); }
+      100% { box-shadow: 0 0 80px rgba(196,92,122,0.5), 0 0 160px rgba(91,38,130,0.35), inset 0 0 60px rgba(0,0,0,0.3); }
+    }
+
+    /* Mini cloud layers inside the frame */
+    .frame-cloud {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 248, 244, 0.18);
+      filter: blur(10px);
+      animation: float-cloud 15s ease-in-out infinite alternate;
+    }
+    .frame-cloud-1 { width: 120px; height: 40px; bottom: 38%; left: -20px; --tx: 20px; --ty: -8px; --ty2: 5px; --speed: 12s; }
+    .frame-cloud-2 { width: 90px;  height: 30px; bottom: 48%; right: -10px; --tx: -15px; --ty: 10px; --ty2: -5px; --speed: 15s; --delay: -3s; }
+    .frame-cloud-3 { width: 150px; height: 50px; bottom: 28%; left: -30px; --tx: 25px; --ty: -5px; --ty2: 8px; --speed: 18s; --delay: -7s; }
+
+    /* Comet streak */
+    .comet {
+      position: absolute;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(to bottom, white, transparent);
+      top: 15%;
+      left: 60%;
+      border-radius: 2px;
+      transform: rotate(-35deg);
+      filter: blur(1px);
+      opacity: 0.7;
+      animation: comet-fall 4s ease-in infinite;
+      animation-delay: 1s;
+    }
+    @keyframes comet-fall {
+      0%   { opacity: 0; transform: rotate(-35deg) translateY(-20px); }
+      20%  { opacity: 0.7; }
+      70%  { opacity: 0.7; }
+      100% { opacity: 0; transform: rotate(-35deg) translateY(80px); }
+    }
+
+    /* Red thread motif */
+    .red-thread {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 60px;
+      background: linear-gradient(to bottom, #e84040, transparent);
+      filter: blur(0.5px);
+    }
+
+    .about-stats {
+      margin-top: 48px;
+      display: flex;
+      gap: 40px;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 400;
+      background: linear-gradient(135deg, var(--gold), var(--blush));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      position: relative;
+      background: linear-gradient(180deg, #0b0c2a 0%, #06060f 100%);
+      padding: 60px 24px 40px;
+      text-align: center;
+      overflow: hidden;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(196,92,122,0.4), rgba(244,184,122,0.4), transparent);
+    }
+
+    .footer-logo {
+      font-size: 1.6rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--cloud-white);
+      text-shadow: 0 0 20px rgba(244,184,122,0.4);
+      margin-bottom: 16px;
+    }
+
+    .footer-tagline {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--text-muted);
+      opacity: 0.6;
+      margin-bottom: 36px;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      list-style: none;
+      margin-bottom: 40px;
+    }
+    .footer-links a {
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0.6;
+      transition: opacity 0.3s, color 0.3s;
+    }
+    .footer-links a:hover { opacity: 1; color: var(--gold); }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      opacity: 0.35;
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── Fade-in on scroll ─────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .about-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .about-visual { height: 260px; }
+      .visual-frame { width: 180px; height: 220px; border-radius: 90px; }
+      .about-stats { gap: 28px; }
+      .footer-links { flex-wrap: wrap; gap: 18px; }
+    }
+
+    @media (max-width: 460px) {
+      .hero-cta { padding: 14px 32px; font-size: 0.82rem; }
+      .about-stats { flex-direction: column; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HERO ═══════════════════════════════════ -->
+<section class="hero" id="hero">
+
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Light rays -->
+  <div class="rays" id="rays"></div>
+
+  <!-- Clouds -->
+  <div class="clouds" id="clouds"></div>
+
+  <!-- Content -->
+  <div class="hero-content">
+    <p class="hero-eyebrow">A story written in the sky</p>
+    <h1 class="hero-title">
+      Musubu<br>
+      <span>結</span>
+    </h1>
+    <p class="hero-subtitle">
+      Two souls, separated by time and distance — bound by an invisible red thread woven through the dusk.
+    </p>
+    <a href="#about" class="hero-cta">Begin the Journey</a>
+  </div>
+
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<!-- ═══════════════════════ ABOUT ══════════════════════════════════ -->
+<section class="about" id="about">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="about-inner">
+    <div class="about-copy reveal">
+      <p class="about-label">Our Story</p>
+      <h2 class="about-heading">Where the sky remembers what we forget</h2>
+      <p class="about-text">
+        Somewhere between the last light of dusk and the first star of evening, there exists a threshold — a moment too fleeting to name. We chase it in the clouds, in the shimmer of a distant city, in the feeling that someone, somewhere, is looking at the same sky.
+      </p>
+      <p class="about-text">
+        Musubu is built for those who believe the world is held together by invisible threads — and that beauty is not something you find, but something you suddenly remember.
+      </p>
+      <div class="about-stats">
+        <div class="stat">
+          <span class="stat-number">∞</span>
+          <span class="stat-label">Skies shared</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">二</span>
+          <span class="stat-label">Souls, one thread</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">黄昏</span>
+          <span class="stat-label">Kataware-doki</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-visual reveal" style="transition-delay: 0.2s;">
+      <div class="visual-frame">
+        <div class="frame-cloud frame-cloud-1"></div>
+        <div class="frame-cloud frame-cloud-2"></div>
+        <div class="frame-cloud frame-cloud-3"></div>
+        <div class="comet"></div>
+        <div class="red-thread"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">結 &nbsp;Musubu</div>
+  <p class="footer-tagline">"Even if we forget each other's names, the thread remains."</p>
+  <ul class="footer-links">
+    <li><a href="#">World</a></li>
+    <li><a href="#">Gallery</a></li>
+    <li><a href="#">Fragments</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <p class="footer-copy">&copy; 2026 Musubu. Crafted with longing, at dusk.</p>
+</footer>
+
+<script>
+  /* ─── Generate Stars ──────────────────────────────────────────── */
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 160; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    const top  = Math.random() * 60;  // only top 60% of hero
+    s.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      top: ${top}%; left: ${Math.random() * 100}%;
+      --d: ${2 + Math.random() * 4}s;
+      --delay: ${-Math.random() * 4}s;
+      --op: ${0.4 + Math.random() * 0.6};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  /* ─── Generate Light Rays ─────────────────────────────────────── */
+  const raysEl = document.getElementById('rays');
+  const rayAngles = [-55,-42,-30,-20,-12,-5, 0, 5, 12, 20, 30, 42, 55, 68, -68];
+  rayAngles.forEach((angle, i) => {
+    const r = document.createElement('div');
+    r.className = 'ray';
+    const dist = Math.abs(angle);
+    const op = Math.max(0.08, 0.45 - dist * 0.004);
+    r.style.cssText = `
+      --rot: ${angle}deg;
+      --op: ${op};
+      --delay: ${i * 0.4}s;
+      width: ${3 + Math.random() * 5}px;
+    `;
+    raysEl.appendChild(r);
+  });
+
+  /* ─── Generate Clouds ─────────────────────────────────────────── */
+  const cloudsEl = document.getElementById('clouds');
+  const cloudDefs = [
+    { w:340, h:90,  top:58, left:5,   blur:22, op:0.50, tx:40,  ty:-12, ty2:8,  speed:35 },
+    { w:280, h:70,  top:64, left:55,  blur:18, op:0.45, tx:-30, ty:-8,  ty2:12, speed:42 },
+    { w:420, h:110, top:52, left:20,  blur:28, op:0.35, tx:25,  ty:-18, ty2:6,  speed:50 },
+    { w:200, h:55,  top:70, left:70,  blur:14, op:0.40, tx:-20, ty:-6,  ty2:10, speed:30 },
+    { w:320, h:80,  top:75, left:-5,  blur:20, op:0.30, tx:35,  ty:-10, ty2:5,  speed:45 },
+    { w:180, h:50,  top:46, left:62,  blur:16, op:0.28, tx:-18, ty:-14, ty2:7,  speed:38 },
+    { w:260, h:65,  top:80, left:35,  blur:24, op:0.38, tx:22,  ty:-6,  ty2:9,  speed:55 },
+  ];
+  cloudDefs.forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'cloud';
+    const hue = 20 + Math.random() * 30;
+    el.style.cssText = `
+      width: ${c.w}px; height: ${c.h}px;
+      top: ${c.top}%; left: ${c.left}%;
+      background: radial-gradient(ellipse, hsla(${hue},80%,92%,0.9) 0%, transparent 70%);
+      --blur: ${c.blur}px;
+      --op: ${c.op};
+      --tx: ${c.tx}px;
+      --ty: ${c.ty}px;
+      --ty2: ${c.ty2}px;
+      --speed: ${c.speed}s;
+      --delay: ${-i * 5}s;
+    `;
+    cloudsEl.appendChild(el);
+  });
+
+  /* ─── Scroll reveal ───────────────────────────────────────────── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ─── Smooth CTA scroll ───────────────────────────────────────── */
+  document.querySelector('.hero-cta').addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
