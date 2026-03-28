@@ -274,6 +274,7 @@
     <li><a href="index.html">Home</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="gallery.html" class="active">Gallery</a></li>
+    <li><a href="memory.html">Play</a></li>
   </ul>
 </nav>
 
@@ -366,7 +367,7 @@
 
   /* ─── Grid + API ──────────────────────────────────────────────── */
   const TOTAL    = 36;
-  const CACHE_KEY = 'musubu_gallery_v1';
+  const CACHE_KEY = 'musubu_gallery_v2';   /* bumped — forces refetch of stale v1 data */
   const CACHE_TTL = 24 * 60 * 60 * 1000;
   const grid     = document.getElementById('grid');
 
@@ -382,7 +383,8 @@
   function getCached() {
     try {
       const s = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
-      if (s && Date.now() - s.t < CACHE_TTL) return s.d;
+      /* Only trust cache if it has a full set of TOTAL entries */
+      if (s && Date.now() - s.t < CACHE_TTL && Array.isArray(s.d) && s.d.length >= TOTAL) return s.d;
     } catch(_) {}
     return null;
   }
@@ -390,14 +392,15 @@
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), d: data })); } catch(_) {}
   }
 
-  /* Fetch top characters (two pages, slice to 36) */
+  /* Fetch top characters — sequential to stay under Jikan's 3 req/sec limit */
   async function fetchChars() {
     const cached = getCached();
     if (cached) return cached;
-    const [p1, p2] = await Promise.all([
-      fetch('https://api.jikan.moe/v4/top/characters?limit=25&page=1').then(r => r.json()),
-      fetch('https://api.jikan.moe/v4/top/characters?limit=25&page=2').then(r => r.json()),
-    ]);
+
+    const p1 = await fetch('https://api.jikan.moe/v4/top/characters?limit=25&page=1').then(r => r.json());
+    await new Promise(r => setTimeout(r, 400));
+    const p2 = await fetch('https://api.jikan.moe/v4/top/characters?limit=25&page=2').then(r => r.json());
+
     const data = [...(p1.data || []), ...(p2.data || [])].slice(0, TOTAL);
     setCache(data);
     return data;
@@ -409,16 +412,15 @@
   async function loadCharacters() {
     try {
       const chars = await fetchChars();
+      /* Capture placeholders once, before any DOM changes */
       const placeholders = Array.from(grid.querySelectorAll('.grid-item'));
 
       chars.forEach((char, i) => {
-        const placeholder = placeholders[i];
-        const name    = char.name || `Character ${i + 1}`;
-        const imgUrl  = char.images?.jpg?.image_url || char.images?.webp?.image_url || '';
+        if (i >= placeholders.length) return;
+        const item   = placeholders[i];   /* modify in-place — all 36 stay in grid */
+        const name   = char.name || `Character ${i + 1}`;
+        const imgUrl = char.images?.jpg?.image_url || char.images?.webp?.image_url || '';
 
-        const item = document.createElement('div');
-        item.className = 'grid-item';
-        item.style.setProperty('--delay', `${i * 0.04}s`);
         item.dataset.name = name.toLowerCase();
 
         const overlay = document.createElement('div');
@@ -427,30 +429,27 @@
         item.appendChild(overlay);
 
         allItems.push({ name: name.toLowerCase(), el: item });
+        item.addEventListener('click', () => openLightbox(imgUrl, name));
 
         if (imgUrl) {
-          const preloader = new Image();
-          preloader.onload = () => {
-            const img = document.createElement('img');
-            img.src = imgUrl; img.alt = name;
-            item.prepend(img);
-            placeholder.replaceWith(item);
-
-            /* Lightbox click */
-            item.addEventListener('click', () => openLightbox(imgUrl, name));
-          };
-          preloader.onerror = () => {
-            placeholder.replaceWith(item);
-            item.addEventListener('click', () => openLightbox('', name));
-          };
-          preloader.src = imgUrl;
+          const img = document.createElement('img');
+          img.alt = name; img.loading = 'lazy'; img.decoding = 'async';
+          /* Remove skeleton once image is ready (or on error) */
+          img.onload  = () => item.classList.remove('skeleton');
+          img.onerror = () => item.classList.remove('skeleton');
+          img.src = imgUrl;
+          item.prepend(img);
         } else {
-          placeholder.replaceWith(item);
+          item.classList.remove('skeleton');
         }
       });
 
+      /* Remove skeleton from any slots the API didn't fill */
+      placeholders.slice(chars.length).forEach(el => el.classList.remove('skeleton'));
+
     } catch (err) {
       console.warn('Jikan API unavailable:', err);
+      grid.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton'));
     }
   }
 

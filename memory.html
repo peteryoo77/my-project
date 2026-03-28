@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sky Memory — Musubu</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    /* ─── Page Header ───────────────────────────────────────────── */
+    .page-header {
+      position: relative;
+      width: 100%; height: 50vh; min-height: 320px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 65% 50% at 50% 100%, #f4b87a33 0%, transparent 60%),
+        radial-gradient(ellipse 50% 45% at 25% 85%,  #c45c7a28 0%, transparent 55%),
+        radial-gradient(ellipse 55% 50% at 75% 80%,  #6b2fa033 0%, transparent 55%),
+        linear-gradient(
+          180deg,
+          #0b0c2a 0%, #141436 14%, #231860 28%,
+          #3c2278 42%, #6b2e82 56%, #9b4070 68%,
+          #c46860 80%, #e8a870 90%, #f8d090 100%
+        );
+    }
+
+    .stars { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s); opacity: 0;
+    }
+    @keyframes twinkle {
+      0%   { opacity: 0; transform: scale(0.6); }
+      100% { opacity: var(--op, 0.9); transform: scale(1.2); }
+    }
+
+    .clouds { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .cloud {
+      position: absolute; border-radius: 50%;
+      filter: blur(var(--blur, 18px)); opacity: var(--op, 0.45);
+      animation: drift var(--speed, 40s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes drift {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(var(--tx, 25px), var(--ty, -10px)); }
+    }
+
+    .horizon-glow {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
+      background: linear-gradient(to top, rgba(248,208,144,0.3) 0%, rgba(200,104,96,0.12) 35%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative; z-index: 10;
+      text-align: center; padding: 0 24px;
+      animation: fade-up 1.2s 0.2s ease forwards;
+      opacity: 0; transform: translateY(24px);
+    }
+    .header-kana {
+      display: block;
+      font-size: clamp(0.65rem, 1.4vw, 0.8rem);
+      letter-spacing: 0.5em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7; margin-bottom: 16px;
+    }
+    .header-title {
+      font-size: clamp(2.4rem, 7vw, 4.6rem);
+      font-weight: 400; color: var(--cloud-white); line-height: 1.08;
+      text-shadow: 0 0 40px rgba(244,184,122,0.5), 0 0 80px rgba(196,92,122,0.3), 0 2px 4px rgba(0,0,0,0.4);
+      margin-bottom: 16px;
+    }
+    .header-title em {
+      display: block; font-style: italic; font-size: 0.38em; letter-spacing: 0.12em;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--blush) 55%, var(--sky) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-top: 10px;
+    }
+
+    /* ─── Game Section ──────────────────────────────────────────── */
+    .game-section {
+      position: relative;
+      background: linear-gradient(180deg, #0b0c2a 0%, #0d0e2e 50%, #0b0c2a 100%);
+      padding: 64px 24px 100px;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      animation: orb-pulse 9s ease-in-out infinite alternate;
+    }
+    .orb-1 { width:700px; height:700px; background:radial-gradient(circle,#3d1f6e22 0%,transparent 70%); top:-10%; left:-15%; animation-delay:0s; }
+    .orb-2 { width:500px; height:500px; background:radial-gradient(circle,#c45c7a18 0%,transparent 70%); top:30%; right:-12%; animation-delay:-5s; }
+    .orb-3 { width:600px; height:600px; background:radial-gradient(circle,#1a4e6e18 0%,transparent 70%); bottom:0; left:25%; animation-delay:-3s; }
+    @keyframes orb-pulse {
+      0%   { transform: scale(1) translate(0,0); opacity:0.7; }
+      100% { transform: scale(1.12) translate(18px,-18px); opacity:1; }
+    }
+
+    /* ─── Stats Bar ─────────────────────────────────────────────── */
+    .stats-bar {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+      gap: 48px; margin-bottom: 40px;
+    }
+    .stat-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .stat-label {
+      font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--text-muted); opacity: 0.6;
+    }
+    .stat-val {
+      font-size: 1.4rem; font-weight: 400;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--blush) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.2;
+    }
+
+    /* ─── Board ─────────────────────────────────────────────────── */
+    .board {
+      position: relative; z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ─── Cards ─────────────────────────────────────────────────── */
+    .card {
+      aspect-ratio: 3 / 4;
+      perspective: 800px;
+      cursor: pointer;
+    }
+    .card-inner {
+      position: relative; width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-back,
+    .card-front {
+      position: absolute; inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    /* Card back */
+    .card-back {
+      background: linear-gradient(135deg, #1a1a4e, #3d1f6e, #1a1a4e);
+      border: 1px solid rgba(255,245,220,0.12);
+      display: flex; align-items: center; justify-content: center;
+      transition: box-shadow 0.35s;
+    }
+    .card-glyph {
+      font-size: 2rem;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(255,213,128,0.6);
+      user-select: none;
+    }
+
+    /* Card front */
+    .card-front {
+      transform: rotateY(180deg);
+      background: linear-gradient(135deg, #1a1a4e, #3d1f6e);
+    }
+    .card-front img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .card-front .card-placeholder {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #1a1a4e 0%, #3d1f6e 50%, #1a1a4e 100%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px; text-align: center;
+    }
+    .card-front .card-placeholder span {
+      font-size: 0.75rem; letter-spacing: 0.1em;
+      color: var(--gold); opacity: 0.85; line-height: 1.4;
+    }
+    .card-name {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 8px 8px;
+      background: linear-gradient(to top, rgba(11,12,42,0.9) 0%, transparent 100%);
+      font-size: 0.75rem; letter-spacing: 0.08em;
+      color: var(--cloud-white); text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      z-index: 1;
+    }
+
+    /* Hover: unflipped/unmatched */
+    .card:not(.flipped):not(.matched) .card-back:hover,
+    .card:not(.flipped):not(.matched):hover .card-back {
+      box-shadow: 0 0 18px rgba(255,213,128,0.25), 0 0 36px rgba(196,92,122,0.15);
+    }
+    .card:not(.flipped):not(.matched):hover .card-inner {
+      transform: scale(1.04) translateY(-2px);
+    }
+
+    /* Matched */
+    .card.matched .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card.matched .card-front {
+      box-shadow: 0 0 20px rgba(255,213,128,0.5), 0 0 40px rgba(196,92,122,0.3);
+      border: 1px solid rgba(255,213,128,0.4);
+    }
+
+    /* ─── Win Overlay ───────────────────────────────────────────── */
+    #win-overlay {
+      position: fixed; inset: 0; z-index: 7000;
+      background: rgba(6,6,18,0.88);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease;
+      overflow: hidden;
+    }
+    #win-overlay.visible {
+      opacity: 1; pointer-events: all;
+    }
+
+    .win-panel {
+      position: relative; z-index: 2;
+      text-align: center;
+      padding: 48px 56px 52px;
+      background: linear-gradient(160deg, rgba(26,26,78,0.9) 0%, rgba(61,31,110,0.85) 50%, rgba(26,26,78,0.9) 100%);
+      border: 1px solid rgba(255,245,220,0.12);
+      border-radius: 24px;
+      box-shadow: 0 0 60px rgba(196,92,122,0.2), 0 0 120px rgba(91,38,130,0.15);
+      max-width: 400px; width: 90%;
+      animation: panel-in 0.6s 0.1s ease both;
+    }
+    @keyframes panel-in {
+      from { transform: scale(0.88) translateY(20px); opacity: 0; }
+      to   { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .win-glyph {
+      font-size: 4rem;
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(255,213,128,0.8), 0 0 60px rgba(255,213,128,0.4);
+      display: block; margin-bottom: 20px;
+      animation: glyph-pulse 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes glyph-pulse {
+      0%   { text-shadow: 0 0 20px rgba(255,213,128,0.6), 0 0 40px rgba(255,213,128,0.3); }
+      100% { text-shadow: 0 0 40px rgba(255,213,128,1),   0 0 80px rgba(255,213,128,0.5); }
+    }
+
+    .win-heading {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 400; color: var(--cloud-white);
+      letter-spacing: 0.04em; margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(244,184,122,0.4);
+    }
+    .win-sub {
+      font-style: italic; font-size: 0.9rem;
+      color: var(--text-muted); opacity: 0.75;
+      margin-bottom: 28px; letter-spacing: 0.04em;
+    }
+    .win-stats {
+      display: flex; justify-content: center; gap: 40px;
+      margin-bottom: 36px;
+    }
+    .win-stat {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .win-stat-label {
+      font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--text-muted); opacity: 0.6;
+    }
+    .win-stat-val {
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--blush) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    #play-again {
+      display: inline-block;
+      padding: 13px 40px;
+      background: linear-gradient(135deg, var(--magenta), var(--dusk-purple));
+      border: 1px solid rgba(255,245,220,0.15);
+      border-radius: 50px;
+      color: var(--cloud-white);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: pointer;
+      transition: box-shadow 0.35s, transform 0.25s, border-color 0.35s;
+    }
+    #play-again:hover {
+      box-shadow: 0 0 24px rgba(196,92,122,0.5), 0 0 48px rgba(91,38,130,0.3);
+      border-color: rgba(255,245,220,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ─── Falling stars (win overlay) ──────────────────────────── */
+    .win-star {
+      position: absolute;
+      top: -10px;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      animation: fall var(--fall-d, 3s) var(--fall-delay, 0s) ease-in infinite;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(0) scale(0.8); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.7; }
+      100% { transform: translateY(110vh) scale(1.4); opacity: 0; }
+    }
+
+    /* ─── Loading state for board ───────────────────────────────── */
+    .board-loading {
+      position: relative; z-index: 2;
+      text-align: center; padding: 60px 0;
+      color: var(--text-muted); font-style: italic; opacity: 0.6;
+      font-size: 0.9rem; letter-spacing: 0.06em;
+    }
+
+    /* ─── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 620px) {
+      .board { gap: 8px; max-width: 100%; }
+      .game-section { padding: 48px 16px 80px; }
+      .stats-bar { gap: 28px; }
+    }
+    @media (max-width: 480px) {
+      .board { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+      .card-glyph { font-size: 1.4rem; }
+      .card-name { font-size: 0.6rem; padding: 14px 4px 5px; }
+      .win-panel { padding: 36px 28px 40px; }
+      .stats-bar { gap: 20px; }
+      .stat-val { font-size: 1.15rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading screen -->
+<div id="loading-screen">
+  <div class="loading-logo">結 &nbsp;Musubu</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<!-- Scroll progress + back-to-top -->
+<div id="scroll-progress"></div>
+<button id="back-to-top" aria-label="Back to top">↑</button>
+
+<!-- Win Overlay -->
+<div id="win-overlay" role="dialog" aria-modal="true" aria-label="You won">
+  <!-- Falling stars inserted by JS -->
+  <div class="win-panel">
+    <span class="win-glyph">結</span>
+    <h2 class="win-heading">All threads connected</h2>
+    <p class="win-sub"><em>The sky remembers every pair</em></p>
+    <div class="win-stats">
+      <div class="win-stat">
+        <span class="win-stat-label">Time</span>
+        <span class="win-stat-val" id="win-time">0:00</span>
+      </div>
+      <div class="win-stat">
+        <span class="win-stat-label">Moves</span>
+        <span class="win-stat-val" id="win-moves">0</span>
+      </div>
+    </div>
+    <button id="play-again">Play Again</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ NAV ════════════════════════════════════ -->
+<nav>
+  <a href="index.html" class="nav-logo">結 &nbsp;Musubu</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="memory.html" class="active">Play</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════ PAGE HEADER ═══════════════════════════ -->
+<header class="page-header">
+  <div class="stars"  id="header-stars"></div>
+  <div class="clouds" id="header-clouds"></div>
+  <div class="horizon-glow"></div>
+
+  <div class="header-content">
+    <span class="header-kana">星の記憶 &nbsp;·&nbsp; Memory of Stars</span>
+    <h1 class="header-title">
+      Sky Memory
+      <em>Find the thread that binds</em>
+    </h1>
+  </div>
+</header>
+
+<!-- ═══════════════════════ GAME ═══════════════════════════════════ -->
+<section class="game-section">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-label">Moves</span>
+      <span id="stat-moves" class="stat-val">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Time</span>
+      <span id="stat-time" class="stat-val">0:00</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Pairs</span>
+      <span id="stat-pairs" class="stat-val">0 / 8</span>
+    </div>
+  </div>
+
+  <div id="board" class="board"></div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">結 &nbsp;Musubu</div>
+  <p class="footer-tagline">"Even if we forget each other's names, the thread remains."</p>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+  </ul>
+  <p class="footer-copy">&copy; 2026 Musubu. Crafted with longing, at dusk.</p>
+</footer>
+
+<script>
+  /* ─── Header: Stars ───────────────────────────────────────────── */
+  const starsEl = document.getElementById('header-stars');
+  for (let i = 0; i < 110; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.2 + 0.4;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random() * 65}%; left:${Math.random() * 100}%;
+      --d:${2 + Math.random() * 4}s;
+      --delay:${-Math.random() * 5}s;
+      --op:${0.35 + Math.random() * 0.65};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  /* ─── Header: Clouds ──────────────────────────────────────────── */
+  const cloudsEl = document.getElementById('header-clouds');
+  [
+    { w:300, h:80,  top:55, left:0,   blur:20, op:0.40, tx:30,  ty:-10, speed:36 },
+    { w:240, h:60,  top:62, left:48,  blur:16, op:0.35, tx:-25, ty:-7,  speed:44 },
+    { w:380, h:95,  top:50, left:20,  blur:26, op:0.28, tx:22,  ty:-14, speed:52 },
+    { w:200, h:55,  top:68, left:70,  blur:14, op:0.33, tx:-18, ty:-5,  speed:30 },
+    { w:280, h:70,  top:72, left:-4,  blur:18, op:0.26, tx:28,  ty:-8,  speed:46 },
+  ].forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'cloud';
+    const hue = 25 + Math.random() * 20;
+    el.style.cssText = `
+      width:${c.w}px; height:${c.h}px;
+      top:${c.top}%; left:${c.left}%;
+      background:radial-gradient(ellipse,hsla(${hue},75%,90%,0.85) 0%,transparent 70%);
+      --blur:${c.blur}px; --op:${c.op};
+      --tx:${c.tx}px; --ty:${c.ty}px;
+      --speed:${c.speed}s; --delay:${-i * 7}s;
+    `;
+    cloudsEl.appendChild(el);
+  });
+
+  /* ─── Win overlay: falling stars ─────────────────────────────── */
+  const winOverlay = document.getElementById('win-overlay');
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.className = 'win-star';
+    const size = Math.random() * 3 + 1;
+    const colors = ['var(--gold)', 'var(--blush)', 'var(--sky)', '#ffffff'];
+    s.style.cssText = `
+      left:${Math.random() * 100}%;
+      width:${size}px; height:${size}px;
+      background:${colors[Math.floor(Math.random() * colors.length)]};
+      --fall-d:${2.5 + Math.random() * 3}s;
+      --fall-delay:${Math.random() * 4}s;
+    `;
+    winOverlay.appendChild(s);
+  }
+
+  /* ─── Game State ──────────────────────────────────────────────── */
+  const PAIRS = 8;
+  let deck = [];
+  let flipped = [];
+  let matched = 0;
+  let moves = 0;
+  let pairsFound = 0;
+  let locked = false;
+  let timerInterval = null;
+  let secondsElapsed = 0;
+  let gameStarted = false;
+
+  const board       = document.getElementById('board');
+  const statMoves   = document.getElementById('stat-moves');
+  const statTime    = document.getElementById('stat-time');
+  const statPairs   = document.getElementById('stat-pairs');
+  const winTime     = document.getElementById('win-time');
+  const winMoves    = document.getElementById('win-moves');
+  const playAgain   = document.getElementById('play-again');
+
+  /* ─── Utility ─────────────────────────────────────────────────── */
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = String(s % 60).padStart(2, '0');
+    return `${m}:${sec}`;
+  }
+
+  /* ─── Timer ───────────────────────────────────────────────────── */
+  function startTimer() {
+    if (timerInterval) return;
+    timerInterval = setInterval(() => {
+      secondsElapsed++;
+      statTime.textContent = formatTime(secondsElapsed);
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  /* ─── Image Source ────────────────────────────────────────────── */
+  async function loadChars() {
+    try {
+      const s = JSON.parse(localStorage.getItem('musubu_gallery_v2') || 'null');
+      if (s && Array.isArray(s.d) && s.d.length >= 8) {
+        const valid = s.d.filter(c => c.images?.jpg?.image_url || c.images?.webp?.image_url).slice(0, 8);
+        if (valid.length >= 8) return valid;
+      }
+    } catch(_) {}
+    const res = await fetch('https://api.jikan.moe/v4/top/characters?limit=25&page=1');
+    const json = await res.json();
+    return (json.data || []).filter(c => c.images?.jpg?.image_url || c.images?.webp?.image_url).slice(0, 8);
+  }
+
+  /* ─── Build Deck ──────────────────────────────────────────────── */
+  function buildDeck(chars) {
+    const pairs = chars.map((char, i) => ({
+      id: i,
+      name: char.name || `Character ${i + 1}`,
+      imgUrl: char.images?.jpg?.image_url || char.images?.webp?.image_url || ''
+    }));
+    return shuffle([...pairs, ...pairs.map(p => ({ ...p }))]);
+  }
+
+  /* ─── Render Board ────────────────────────────────────────────── */
+  function renderBoard() {
+    board.innerHTML = '';
+    deck.forEach((card, idx) => {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.dataset.index = idx;
+      el.dataset.id = card.id;
+
+      const inner = document.createElement('div');
+      inner.className = 'card-inner';
+
+      // Back
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      const glyph = document.createElement('span');
+      glyph.className = 'card-glyph';
+      glyph.textContent = '結';
+      back.appendChild(glyph);
+
+      // Front
+      const front = document.createElement('div');
+      front.className = 'card-front';
+
+      if (card.imgUrl) {
+        const img = document.createElement('img');
+        img.alt = card.name;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.src = card.imgUrl;
+        img.onerror = () => {
+          img.remove();
+          showPlaceholder(front, card.name);
+        };
+        front.appendChild(img);
+      } else {
+        showPlaceholder(front, card.name);
+      }
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'card-name';
+      nameEl.textContent = card.name;
+      front.appendChild(nameEl);
+
+      inner.appendChild(back);
+      inner.appendChild(front);
+      el.appendChild(inner);
+
+      el.addEventListener('click', () => onCardClick(el));
+      board.appendChild(el);
+    });
+  }
+
+  function showPlaceholder(frontEl, name) {
+    const ph = document.createElement('div');
+    ph.className = 'card-placeholder';
+    const span = document.createElement('span');
+    span.textContent = name;
+    ph.appendChild(span);
+    frontEl.prepend(ph);
+  }
+
+  /* ─── Card Click Logic ────────────────────────────────────────── */
+  function onCardClick(el) {
+    if (locked) return;
+    if (el.classList.contains('flipped')) return;
+    if (el.classList.contains('matched')) return;
+
+    // Start timer on first flip
+    if (!gameStarted) {
+      gameStarted = true;
+      startTimer();
+    }
+
+    el.classList.add('flipped');
+    flipped.push(el);
+
+    if (flipped.length === 2) {
+      locked = true;
+      moves++;
+      statMoves.textContent = moves;
+      checkMatch();
+    }
+  }
+
+  function checkMatch() {
+    const [a, b] = flipped;
+    const idA = Number(a.dataset.id);
+    const idB = Number(b.dataset.id);
+
+    if (idA === idB) {
+      // Match!
+      a.classList.add('matched');
+      b.classList.add('matched');
+      pairsFound++;
+      statPairs.textContent = `${pairsFound} / ${PAIRS}`;
+      flipped = [];
+      locked = false;
+
+      if (pairsFound === PAIRS) {
+        stopTimer();
+        setTimeout(showWin, 600);
+      }
+    } else {
+      // No match — flip back after 1 second
+      setTimeout(() => {
+        a.classList.remove('flipped');
+        b.classList.remove('flipped');
+        flipped = [];
+        locked = false;
+      }, 1000);
+    }
+  }
+
+  /* ─── Win Screen ──────────────────────────────────────────────── */
+  function showWin() {
+    winTime.textContent  = formatTime(secondsElapsed);
+    winMoves.textContent = moves;
+    winOverlay.classList.add('visible');
+  }
+
+  /* ─── Reset / Restart ─────────────────────────────────────────── */
+  function resetGame(chars) {
+    stopTimer();
+    flipped = [];
+    matched = 0;
+    moves = 0;
+    pairsFound = 0;
+    locked = false;
+    secondsElapsed = 0;
+    gameStarted = false;
+
+    statMoves.textContent = '0';
+    statTime.textContent  = '0:00';
+    statPairs.textContent = '0 / 8';
+
+    winOverlay.classList.remove('visible');
+
+    deck = buildDeck(chars);
+    renderBoard();
+  }
+
+  /* ─── Init ────────────────────────────────────────────────────── */
+  let cachedChars = null;
+
+  async function initGame() {
+    board.innerHTML = '<div class="board-loading">Weaving the constellations…</div>';
+    try {
+      cachedChars = await loadChars();
+      deck = buildDeck(cachedChars);
+      renderBoard();
+    } catch(err) {
+      console.warn('Failed to load characters:', err);
+      board.innerHTML = '<div class="board-loading">Could not reach the stars. Please refresh.</div>';
+    }
+  }
+
+  playAgain.addEventListener('click', () => {
+    if (cachedChars) {
+      resetGame(cachedChars);
+    } else {
+      initGame();
+    }
+  });
+
+  initGame();
+</script>
+<script src="shared.js"></script>
+</body>
+</html>
