@@ -1,0 +1,289 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Musubu — Design Tokens
+   Single source of truth for all design decisions.
+   Import this file before base.css and any component styles.
+
+   Usage:  @import url('../styles/design-tokens.css');
+           or <link rel="stylesheet" href="styles/design-tokens.css" />
+═══════════════════════════════════════════════════════════════════ */
+
+:root {
+
+  /* ─────────────────────────────────────────────────────────────
+     COLOR — Background / Depth
+     Dark blues and purples that form the night sky canvas.
+  ───────────────────────────────────────────────────────────── */
+  --color-bg-deepest:   #06060f;   /* absolute darkest, footer base */
+  --color-bg-page:      #0b0c2a;   /* --deep-night  — page background */
+  --color-bg-raised:    #1a1a4e;   /* --twilight    — elevated surfaces */
+  --color-bg-overlay:   #110e30;   /* mid-section backgrounds */
+  --color-bg-card:      rgba(255, 255, 255, 0.03);  /* glass card fill */
+  --color-bg-glass:     rgba(255, 255, 255, 0.06);  /* frosted glass UI */
+
+  /* ─────────────────────────────────────────────────────────────
+     COLOR — Brand / Accent
+     Warm, luminous tones extracted from Shinkai dusk palettes.
+  ───────────────────────────────────────────────────────────── */
+  --color-dusk-purple:  #3d1f6e;   /* deep violet accent */
+  --color-magenta:      #c45c7a;   /* primary accent — pink-red */
+  --color-blush:        #e89ab5;   /* secondary accent — light pink */
+  --color-apricot:      #f4b87a;   /* warm orange highlight */
+  --color-gold:         #ffd580;   /* primary highlight — warm gold */
+
+  /* ─────────────────────────────────────────────────────────────
+     COLOR — Sky
+     Cool tones that represent the sky, used for contrast / calm.
+  ───────────────────────────────────────────────────────────── */
+  --color-sky:          #9bc8e8;   /* cerulean sky */
+  --color-sky-pale:     #d6ecf8;   /* pale horizon */
+  --color-cloud-white:  #fff8f4;   /* warm white — headings / logo */
+
+  /* ─────────────────────────────────────────────────────────────
+     COLOR — Text
+  ───────────────────────────────────────────────────────────── */
+  --color-text-primary: #fef3ec;   /* --text-light  — body text on dark */
+  --color-text-muted:   #c8b8d0;   /* --text-muted  — secondary / labels */
+  --color-text-inverse: #0b0c2a;   /* text on light surfaces */
+
+  /* ─────────────────────────────────────────────────────────────
+     COLOR — Semantic
+  ───────────────────────────────────────────────────────────── */
+  --color-focus:        rgba(155, 200, 232, 0.6);  /* focus ring */
+  --color-border-subtle:rgba(255, 245, 220, 0.08); /* card borders */
+  --color-border-mid:   rgba(255, 245, 220, 0.14); /* input borders */
+  --color-border-strong:rgba(255, 245, 220, 0.20); /* hover borders */
+  --color-divider:      rgba(196, 92, 122, 0.35);  /* section dividers */
+
+  /* ─────────────────────────────────────────────────────────────
+     COLOR — Gradient Presets
+  ───────────────────────────────────────────────────────────── */
+  --gradient-brand:     linear-gradient(135deg, var(--color-gold) 0%, var(--color-blush) 50%, var(--color-sky) 100%);
+  --gradient-warm:      linear-gradient(135deg, var(--color-gold) 0%, var(--color-blush) 100%);
+  --gradient-progress:  linear-gradient(90deg, var(--color-magenta), var(--color-gold), var(--color-sky));
+  --gradient-card-top:  linear-gradient(90deg, var(--color-sky), #6aaed4);
+  --gradient-card-mid:  linear-gradient(90deg, var(--color-magenta), var(--color-blush));
+  --gradient-card-warm: linear-gradient(90deg, var(--color-apricot), var(--color-gold));
+  --gradient-footer:    linear-gradient(180deg, var(--color-bg-page) 0%, var(--color-bg-deepest) 100%);
+  --gradient-thread:    linear-gradient(to bottom, #e84040, transparent);  /* red thread motif */
+
+
+  /* ─────────────────────────────────────────────────────────────
+     TYPOGRAPHY — Font Families
+  ───────────────────────────────────────────────────────────── */
+  --font-serif:         'Georgia', 'Times New Roman', serif;  /* primary — all body & headings */
+  --font-fallback:      serif;
+
+  /* ─────────────────────────────────────────────────────────────
+     TYPOGRAPHY — Font Sizes (static scale)
+     Named after visual role, not just size.
+  ───────────────────────────────────────────────────────────── */
+  --text-2xs:   0.65rem;   /*  ~10px — kana labels, eyebrow spans */
+  --text-xs:    0.70rem;   /*  ~11px — footer copy, tiny captions */
+  --text-sm:    0.75rem;   /*  ~12px — nav links, footer links */
+  --text-sm-alt:0.78rem;   /*  ~12.5px — footer link variant */
+  --text-base:  0.85rem;   /*  ~14px — UI labels, card titles */
+  --text-body:  0.92rem;   /*  ~15px — card body text */
+  --text-md:    1.00rem;   /*  ~16px — gallery description */
+  --text-lg:    1.05rem;   /*  ~17px — about body text */
+  --text-xl:    1.08rem;   /*  ~17px — section body */
+  --text-2xl:   1.60rem;   /*  ~26px — footer logo */
+  --text-3xl:   2.20rem;   /*  ~35px — stat numbers */
+
+  /* ─────────────────────────────────────────────────────────────
+     TYPOGRAPHY — Fluid / Responsive Sizes (clamp)
+     Use for headings that scale between mobile and desktop.
+  ───────────────────────────────────────────────────────────── */
+  --text-fluid-label:   clamp(0.65rem, 1.4vw, 0.80rem);  /* eyebrow / kana */
+  --text-fluid-caption: clamp(0.70rem, 1.5vw, 0.85rem);  /* scroll hint, labels */
+  --text-fluid-body:    clamp(0.90rem, 2.0vw, 1.15rem);  /* verse / subtitle */
+  --text-fluid-subhead: clamp(1.00rem, 2.5vw, 1.40rem);  /* hero subtitle */
+  --text-fluid-quote:   clamp(1.20rem, 2.5vw, 1.65rem);  /* pull quotes */
+  --text-fluid-h3:      clamp(1.60rem, 3.5vw, 2.40rem);  /* section headings */
+  --text-fluid-h2:      clamp(1.80rem, 4.0vw, 2.80rem);  /* page sub-headings */
+  --text-fluid-h1-sm:   clamp(2.40rem, 7.0vw, 5.50rem);  /* about/gallery hero */
+  --text-fluid-h1-md:   clamp(2.60rem, 7.0vw, 5.00rem);  /* gallery / memory hero */
+  --text-fluid-h1-lg:   clamp(2.80rem, 8.0vw, 7.00rem);  /* home hero — largest */
+
+  /* ─────────────────────────────────────────────────────────────
+     TYPOGRAPHY — Font Weights
+  ───────────────────────────────────────────────────────────── */
+  --font-weight-normal:  400;   /* only weight used across the site */
+
+  /* ─────────────────────────────────────────────────────────────
+     TYPOGRAPHY — Line Heights
+  ───────────────────────────────────────────────────────────── */
+  --leading-none:    1;      /* stat numbers, single-line display */
+  --leading-tight:   1.05;   /* hero title */
+  --leading-snug:    1.08;   /* page header titles */
+  --leading-normal:  1.25;   /* section headings */
+  --leading-relaxed: 1.30;   /* card headings */
+  --leading-loose:   1.70;   /* pull quotes */
+  --leading-copy:    1.75;   /* hero subtitle */
+  --leading-body:    1.80;   /* header verse, gallery desc */
+  --leading-prose:   1.85;   /* about body text */
+  --leading-wide:    1.90;   /* section body */
+
+  /* ─────────────────────────────────────────────────────────────
+     TYPOGRAPHY — Letter Spacing
+  ───────────────────────────────────────────────────────────── */
+  --tracking-tighter: -0.01em;  /* hero title kerning */
+  --tracking-normal:   0.00em;
+  --tracking-wide:     0.04em;  /* search input */
+  --tracking-wider:    0.05em;  /* footer tagline */
+  --tracking-widest-1: 0.08em;  /* header title em */
+  --tracking-widest-2: 0.10em;  /* footer copy */
+  --tracking-widest-3: 0.12em;  /* footer logo, overlay name */
+  --tracking-widest-4: 0.18em;  /* CTA buttons */
+  --tracking-widest-5: 0.20em;  /* footer links, letter labels */
+  --tracking-widest-6: 0.25em;  /* nav links, stat labels, card titles */
+  --tracking-widest-7: 0.30em;  /* quote attribution */
+  --tracking-widest-8: 0.40em;  /* hero eyebrow */
+  --tracking-widest-9: 0.45em;  /* section tags */
+  --tracking-logo:     0.50em;  /* header kana, nav logo */
+
+
+  /* ─────────────────────────────────────────────────────────────
+     SPACING — Base scale (Tailwind-style, 1 unit = 4px)
+  ───────────────────────────────────────────────────────────── */
+  --space-0:    0px;
+  --space-0-5:  2px;    /* 0.5 */
+  --space-1:    4px;    /* 1   */
+  --space-2:    8px;    /* 2   */
+  --space-3:    12px;   /* 3   */
+  --space-3-5:  14px;   /* 3.5 */
+  --space-4:    16px;   /* 4   */
+  --space-5:    20px;   /* 5   */
+  --space-6:    24px;   /* 6   — default page horizontal padding */
+  --space-7:    28px;   /* 7   */
+  --space-8:    32px;   /* 8   */
+  --space-9:    36px;   /* 9   */
+  --space-10:   40px;   /* 10  */
+  --space-11:   44px;   /* 11  */
+  --space-12:   48px;   /* 12  */
+  --space-14:   56px;   /* 14  */
+  --space-15:   60px;   /* 15  — footer padding top */
+  --space-20:   80px;   /* 20  — section padding */
+  --space-24:   96px;   /* 24  */
+  --space-25:   100px;  /* 25  — content section padding */
+  --space-28:   112px;  /* 28  */
+  --space-30:   120px;  /* 30  — about section padding */
+
+  /* ─────────────────────────────────────────────────────────────
+     SPACING — Semantic aliases
+  ───────────────────────────────────────────────────────────── */
+  --padding-page-x:     var(--space-6);   /* 24px  — mobile page gutter */
+  --padding-page-x-lg:  var(--space-10);  /* 40px  — desktop page gutter */
+  --padding-section:    var(--space-20);  /* 80px  — section vertical padding */
+  --padding-section-lg: var(--space-30);  /* 120px — large section padding */
+  --padding-nav:        24px 48px;        /* nav bar */
+  --padding-card:       32px 28px;        /* content cards */
+  --padding-btn-md:     16px 44px;        /* primary CTA button */
+  --padding-btn-sm:     15px 40px;        /* secondary button */
+  --gap-nav:            var(--space-7);   /* 28px  — nav link gap */
+  --gap-grid-gallery:   var(--space-3-5); /* 14px  — gallery grid gap */
+  --gap-grid-cards:     var(--space-6);   /* 24px  — 3-col content cards */
+  --gap-footer-links:   var(--space-8);   /* 32px  — footer link gap */
+
+
+  /* ─────────────────────────────────────────────────────────────
+     BORDER RADIUS
+  ───────────────────────────────────────────────────────────── */
+  --radius-none:   0px;
+  --radius-xs:     2px;    /* loading bar, comet streak */
+  --radius-sm:     12px;   /* gallery grid items */
+  --radius-md:     14px;   /* lightbox image, memory cards */
+  --radius-lg:     16px;   /* content cards, char cards */
+  --radius-xl:     50px;   /* pill buttons, search inputs */
+  --radius-arch:   120px;  /* visual frame arched window */
+  --radius-full:   9999px; /* circles (back-to-top, orbs) */
+
+
+  /* ─────────────────────────────────────────────────────────────
+     SHADOWS — Glow-based (no hard drop shadows; everything glows)
+  ───────────────────────────────────────────────────────────── */
+
+  /* Gold / warm */
+  --shadow-gold-sm:     0 0 20px rgba(255, 213, 128, 0.40);
+  --shadow-gold-md:     0 0 40px rgba(244, 184, 122, 0.45);
+  --shadow-gold-lg:     0 0 80px rgba(244, 184, 122, 0.30);
+  --shadow-gold-text:   0 0 20px rgba(244, 184, 122, 0.40);
+
+  /* Magenta / pink */
+  --shadow-magenta-sm:  0 0 24px rgba(196,  92, 122, 0.35);
+  --shadow-magenta-md:  0 0 60px rgba(196,  92, 122, 0.30);
+  --shadow-magenta-lg:  0 0 80px rgba(196,  92, 122, 0.50);
+
+  /* Purple / deep */
+  --shadow-purple-md:   0 0 120px rgba(91,  38, 130, 0.20);
+  --shadow-purple-lg:   0 0 160px rgba(91,  38, 130, 0.35);
+
+  /* Sky / cool */
+  --shadow-sky-sm:      0 0 40px rgba(155, 200, 232, 0.10);
+
+  /* Composite — used on interactive elements */
+  --shadow-card-hover:
+    0 0 24px rgba(196, 92, 122, 0.35),
+    0 0 48px rgba(91,  38, 130, 0.25),
+    0 8px 32px rgba(0, 0, 0, 0.50);
+
+  --shadow-hero-frame:
+    0 0 60px rgba(196, 92, 122, 0.30),
+    0 0 120px rgba(91, 38, 130, 0.20),
+    inset 0 0 60px rgba(0, 0, 0, 0.30);
+
+  --shadow-btn-hover:
+    0 0 40px rgba(244, 184, 122, 0.45),
+    0 0 80px rgba(196,  92, 122, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+
+  --shadow-inset-glass:  inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+
+  /* ─────────────────────────────────────────────────────────────
+     TRANSITIONS
+  ───────────────────────────────────────────────────────────── */
+  --duration-fast:    0.3s;
+  --duration-base:    0.4s;
+  --duration-slow:    0.45s;
+  --duration-slower:  0.55s;
+  --duration-reveal:  0.90s;
+  --ease-default:     ease;
+  --ease-smooth:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --transition-color:     color var(--duration-fast) var(--ease-default),
+                          opacity var(--duration-fast) var(--ease-default);
+  --transition-transform: transform var(--duration-slow) var(--ease-smooth);
+  --transition-shadow:    box-shadow var(--duration-slow) var(--ease-default);
+  --transition-all-card:  transform var(--duration-slow) var(--ease-smooth),
+                          box-shadow var(--duration-slow) var(--ease-default),
+                          border-color var(--duration-base) var(--ease-default);
+
+
+  /* ─────────────────────────────────────────────────────────────
+     BREAKPOINTS
+     CSS doesn't support custom properties in @media queries — use
+     these as documentation and copy values into media rules.
+  ───────────────────────────────────────────────────────────── */
+  /*
+    --bp-xs:   400px   Gallery: 2-col grid
+    --bp-sm:   460px   Hero CTA padding, stats column
+    --bp-sm2:  480px   Nav gap reduce
+    --bp-md:   620px   Gallery: 3-col grid
+    --bp-md2:  680px   About cards: 1-col
+    --bp-lg:   720px   About section: 1-col, visual frame
+    --bp-xl:   880px   Gallery: 4-col grid, section padding
+    --bp-2xl: 1100px   Gallery: 5-col grid
+  */
+
+  /* Z-INDEX SCALE */
+  --z-base:         1;
+  --z-raised:       10;
+  --z-nav:          100;
+  --z-fixed:        500;
+  --z-overlay:      8000;
+  --z-page-trans:   9997;
+  --z-cursor:       9997;
+  --z-progress:     9999;
+  --z-loading:      10000;
+
+}

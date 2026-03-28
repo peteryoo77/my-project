@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Style Guide — Musubu</title>
+  <link rel="stylesheet" href="styles/design-tokens.css" />
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    /* ─── Page layout ───────────────────────────────────────────── */
+    .sg-page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 120px var(--space-6) 100px;
+    }
+
+    /* ─── Section ───────────────────────────────────────────────── */
+    .sg-section {
+      margin-bottom: 88px;
+    }
+    .sg-section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .sg-section-num {
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-logo);
+      text-transform: uppercase;
+      color: var(--color-magenta);
+      opacity: 0.7;
+      min-width: 28px;
+    }
+    .sg-section-title {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: var(--font-weight-normal);
+      color: var(--color-cloud-white);
+      letter-spacing: var(--tracking-widest-3);
+      text-transform: uppercase;
+    }
+    .sg-section-desc {
+      font-size: var(--text-base);
+      font-style: italic;
+      color: var(--color-text-muted);
+      margin-left: auto;
+      opacity: 0.7;
+    }
+
+    /* ─── Token label ───────────────────────────────────────────── */
+    .sg-label {
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-widest-5);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      opacity: 0.55;
+      margin-bottom: var(--space-2);
+      display: block;
+    }
+    .sg-token-name {
+      font-size: 0.72rem;
+      font-family: 'Courier New', monospace;
+      color: var(--color-gold);
+      opacity: 0.8;
+    }
+    .sg-token-value {
+      font-size: 0.68rem;
+      font-family: 'Courier New', monospace;
+      color: var(--color-text-muted);
+      opacity: 0.5;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       1. COLORS
+    ═══════════════════════════════════════════════════════════ */
+    .sg-color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-4);
+    }
+    .sg-swatch {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--color-border-subtle);
+    }
+    .sg-swatch-block {
+      height: 72px;
+      width: 100%;
+    }
+    .sg-swatch-info {
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.03);
+    }
+    .sg-swatch-name {
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: var(--color-cloud-white);
+      opacity: 0.85;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .sg-swatch-var {
+      font-size: 0.62rem;
+      font-family: 'Courier New', monospace;
+      color: var(--color-gold);
+      opacity: 0.65;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .sg-swatch-hex {
+      font-size: 0.62rem;
+      font-family: 'Courier New', monospace;
+      color: var(--color-text-muted);
+      opacity: 0.45;
+    }
+
+    /* Gradient swatches */
+    .sg-gradient-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+    }
+    .sg-gradient-block {
+      height: 56px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border-subtle);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       2. TYPOGRAPHY
+    ═══════════════════════════════════════════════════════════ */
+    .sg-type-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-6);
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .sg-type-row:last-child { border-bottom: none; }
+    .sg-type-meta {
+      min-width: 200px;
+      flex-shrink: 0;
+    }
+    .sg-type-sample {
+      color: var(--color-cloud-white);
+      line-height: 1.2;
+    }
+    .sg-type-sample.muted { color: var(--color-text-muted); }
+
+    /* Letter spacing */
+    .sg-tracking-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+    .sg-tracking-item {
+      padding: var(--space-4);
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-sm);
+    }
+    .sg-tracking-sample {
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+      color: var(--color-cloud-white);
+      margin-bottom: var(--space-2);
+      display: block;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       3. SPACING
+    ═══════════════════════════════════════════════════════════ */
+    .sg-spacing-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .sg-spacing-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .sg-spacing-bar-wrap {
+      flex: 1;
+      height: 24px;
+      display: flex;
+      align-items: center;
+    }
+    .sg-spacing-bar {
+      height: 8px;
+      border-radius: var(--radius-xs);
+      background: linear-gradient(90deg, var(--color-magenta), var(--color-gold));
+      opacity: 0.7;
+    }
+    .sg-spacing-meta {
+      min-width: 210px;
+      display: flex;
+      gap: var(--space-4);
+      align-items: center;
+    }
+    .sg-spacing-px {
+      min-width: 44px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      color: var(--color-gold);
+      opacity: 0.8;
+    }
+    .sg-spacing-var {
+      font-family: 'Courier New', monospace;
+      font-size: 0.68rem;
+      color: var(--color-text-muted);
+      opacity: 0.5;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       4. BORDER RADIUS
+    ═══════════════════════════════════════════════════════════ */
+    .sg-radius-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      align-items: flex-end;
+    }
+    .sg-radius-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .sg-radius-box {
+      background: linear-gradient(135deg, var(--color-dusk-purple), var(--color-magenta));
+      border: 1px solid var(--color-border-mid);
+      width: 80px;
+      height: 80px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       5. SHADOWS
+    ═══════════════════════════════════════════════════════════ */
+    .sg-shadow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-6);
+    }
+    .sg-shadow-item {
+      padding: var(--space-6);
+      background: var(--color-bg-raised);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      gap: var(--space-4);
+      transition: box-shadow var(--duration-base);
+    }
+    .sg-shadow-label { text-align: center; }
+
+    /* ═══════════════════════════════════════════════════════════
+       6. BREAKPOINTS
+    ═══════════════════════════════════════════════════════════ */
+    .sg-bp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-base);
+    }
+    .sg-bp-table th {
+      text-align: left;
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-widest-5);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      opacity: 0.6;
+      border-bottom: 1px solid var(--color-border-subtle);
+      font-weight: var(--font-weight-normal);
+    }
+    .sg-bp-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border-subtle);
+      color: var(--color-text-muted);
+      font-size: var(--text-base);
+      vertical-align: middle;
+    }
+    .sg-bp-table td:first-child {
+      font-family: 'Courier New', monospace;
+      color: var(--color-gold);
+      font-size: 0.78rem;
+    }
+    .sg-bp-table td:nth-child(2) {
+      font-family: 'Courier New', monospace;
+      color: var(--color-blush);
+      font-size: 0.82rem;
+    }
+    .sg-bp-bar-cell { width: 260px; }
+    .sg-bp-bar-bg {
+      background: var(--color-bg-raised);
+      border-radius: var(--radius-xs);
+      height: 6px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .sg-bp-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-xs);
+      background: linear-gradient(90deg, var(--color-magenta), var(--color-sky));
+      opacity: 0.65;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       7. TRANSITIONS
+    ═══════════════════════════════════════════════════════════ */
+    .sg-duration-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+    }
+    .sg-duration-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .sg-duration-dot {
+      width: 20px; height: 20px;
+      border-radius: var(--radius-full);
+      background: var(--color-magenta);
+    }
+    .sg-duration-item:hover .sg-duration-dot {
+      transform: scale(1.6);
+      background: var(--color-gold);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       8. COMPONENTS
+    ═══════════════════════════════════════════════════════════ */
+    .sg-component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: center;
+      margin-bottom: var(--space-6);
+    }
+
+    /* Buttons */
+    .sg-btn-primary {
+      display: inline-block;
+      padding: var(--space-4) var(--space-11);
+      border: 1.5px solid rgba(253,232,176,0.5);
+      border-radius: var(--radius-xl);
+      color: var(--color-cloud-white);
+      text-decoration: none;
+      font-size: var(--text-base);
+      letter-spacing: var(--tracking-widest-4);
+      text-transform: uppercase;
+      background: var(--color-bg-glass);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-gold-sm), var(--shadow-inset-glass);
+      transition: all var(--duration-base) var(--ease-default);
+      cursor: pointer;
+    }
+    .sg-btn-primary:hover {
+      background: rgba(244,184,122,0.18);
+      border-color: rgba(253,232,176,0.9);
+      box-shadow: var(--shadow-btn-hover);
+      transform: translateY(-2px);
+    }
+    .sg-btn-secondary {
+      display: inline-block;
+      padding: 15px 40px;
+      border: 1.5px solid rgba(253,232,176,0.4);
+      border-radius: var(--radius-xl);
+      color: var(--color-cloud-white);
+      text-decoration: none;
+      font-size: var(--text-base);
+      letter-spacing: var(--tracking-widest-5);
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      transition: all var(--duration-base) var(--ease-default);
+      cursor: pointer;
+    }
+    .sg-btn-secondary:hover {
+      background: rgba(244,184,122,0.15);
+      border-color: rgba(253,232,176,0.8);
+    }
+
+    /* Card */
+    .sg-card {
+      padding: var(--space-8) var(--space-7);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-card);
+      backdrop-filter: blur(8px);
+      max-width: 300px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-all-card);
+    }
+    .sg-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gradient-warm);
+      opacity: 0.6;
+    }
+    .sg-card:hover {
+      border-color: var(--color-border-strong);
+      box-shadow: var(--shadow-sky-sm);
+      transform: translateY(-4px);
+    }
+
+    /* Nav preview */
+    .sg-nav-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(11,12,42,0.75);
+      backdrop-filter: blur(6px);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border-subtle);
+    }
+
+    /* Input */
+    .sg-input {
+      width: 280px;
+      padding: 13px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--color-border-mid);
+      border-radius: var(--radius-xl);
+      color: var(--color-text-primary);
+      font-family: var(--font-serif);
+      font-size: var(--text-body);
+      outline: none;
+      transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+    }
+    .sg-input:focus {
+      border-color: rgba(196,92,122,0.5);
+      box-shadow: 0 0 22px rgba(196,92,122,0.18);
+    }
+
+    /* ─── Page header ────────────────────────────────────────────── */
+    .sg-hero {
+      position: relative;
+      padding: 140px var(--space-6) 80px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 100%, rgba(196,92,122,0.18) 0%, transparent 60%),
+        linear-gradient(180deg, var(--color-bg-page) 0%, var(--color-bg-overlay) 60%, var(--color-bg-page) 100%);
+      margin-bottom: 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .sg-hero-eyebrow {
+      font-size: var(--text-fluid-label);
+      letter-spacing: var(--tracking-logo);
+      text-transform: uppercase;
+      color: var(--color-gold);
+      opacity: 0.7;
+      margin-bottom: var(--space-4);
+    }
+    .sg-hero-title {
+      font-size: var(--text-fluid-h1-sm);
+      font-weight: var(--font-weight-normal);
+      color: var(--color-cloud-white);
+      line-height: var(--leading-snug);
+      margin-bottom: var(--space-4);
+      text-shadow: 0 0 40px rgba(196,92,122,0.3);
+    }
+    .sg-hero-title span {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .sg-hero-sub {
+      font-size: var(--text-fluid-body);
+      font-style: italic;
+      color: var(--color-text-muted);
+      max-width: 520px;
+      line-height: var(--leading-body);
+    }
+    .sg-hero-meta {
+      margin-top: var(--space-6);
+      display: flex;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+    .sg-hero-tag {
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-widest-6);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      opacity: 0.5;
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-xl);
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      .sg-type-row { flex-direction: column; gap: var(--space-2); }
+      .sg-type-meta { min-width: auto; }
+      .sg-spacing-meta { min-width: auto; }
+      .sg-bp-bar-cell { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading screen -->
+<div id="loading-screen">
+  <div class="loading-logo">結 &nbsp;Musubu</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+<div id="scroll-progress"></div>
+<button id="back-to-top" aria-label="Back to top">↑</button>
+
+<!-- ═══════════════════════ NAV ════════════════════════════════════ -->
+<nav>
+  <a href="index.html" class="nav-logo">結 &nbsp;Musubu</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="memory.html">Play</a></li>
+    <li><a href="styleguide.html" class="active">Style Guide</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════ HERO ══════════════════════════════════ -->
+<div class="sg-hero">
+  <p class="sg-hero-eyebrow">Design System</p>
+  <h1 class="sg-hero-title">Musubu <span>Style Guide</span></h1>
+  <p class="sg-hero-sub">
+    All design tokens extracted from the living codebase —
+    colors, typography, spacing, and components in one place.
+  </p>
+  <div class="sg-hero-meta">
+    <span class="sg-hero-tag">v1.0</span>
+    <span class="sg-hero-tag">tokens: styles/design-tokens.css</span>
+    <span class="sg-hero-tag">base: base.css</span>
+    <span class="sg-hero-tag">nav: nav.css</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CONTENT ══════════════════════════════ -->
+<div class="sg-page">
+
+  <!-- ── 1. Colors ─────────────────────────────────────────────── -->
+  <section class="sg-section reveal">
+    <div class="sg-section-header">
+      <span class="sg-section-num">01</span>
+      <h2 class="sg-section-title">Colors</h2>
+      <span class="sg-section-desc">12 base tokens + semantic aliases</span>
+    </div>
+
+    <span class="sg-label">Background &amp; Depth</span>
+    <div class="sg-color-grid">
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#06060f;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Deepest</span>
+          <span class="sg-swatch-var">--color-bg-deepest</span>
+          <span class="sg-swatch-hex">#06060f</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#0b0c2a;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Page / Deep Night</span>
+          <span class="sg-swatch-var">--color-bg-page</span>
+          <span class="sg-swatch-hex">#0b0c2a</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#1a1a4e;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Raised / Twilight</span>
+          <span class="sg-swatch-var">--color-bg-raised</span>
+          <span class="sg-swatch-hex">#1a1a4e</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#110e30;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Overlay</span>
+          <span class="sg-swatch-var">--color-bg-overlay</span>
+          <span class="sg-swatch-hex">#110e30</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1);"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Card Fill</span>
+          <span class="sg-swatch-var">--color-bg-card</span>
+          <span class="sg-swatch-hex">rgba(255,255,255,.03)</span>
+        </div>
+      </div>
+    </div>
+
+    <span class="sg-label" style="margin-top:var(--space-6); display:block;">Brand &amp; Accent</span>
+    <div class="sg-color-grid">
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#3d1f6e;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Dusk Purple</span>
+          <span class="sg-swatch-var">--color-dusk-purple</span>
+          <span class="sg-swatch-hex">#3d1f6e</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#c45c7a;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Magenta</span>
+          <span class="sg-swatch-var">--color-magenta</span>
+          <span class="sg-swatch-hex">#c45c7a</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#e89ab5;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Blush</span>
+          <span class="sg-swatch-var">--color-blush</span>
+          <span class="sg-swatch-hex">#e89ab5</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#f4b87a;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Apricot</span>
+          <span class="sg-swatch-var">--color-apricot</span>
+          <span class="sg-swatch-hex">#f4b87a</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#ffd580;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Gold</span>
+          <span class="sg-swatch-var">--color-gold</span>
+          <span class="sg-swatch-hex">#ffd580</span>
+        </div>
+      </div>
+    </div>
+
+    <span class="sg-label" style="margin-top:var(--space-6); display:block;">Sky &amp; Text</span>
+    <div class="sg-color-grid">
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#9bc8e8;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Sky</span>
+          <span class="sg-swatch-var">--color-sky</span>
+          <span class="sg-swatch-hex">#9bc8e8</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#d6ecf8;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Pale Sky</span>
+          <span class="sg-swatch-var">--color-sky-pale</span>
+          <span class="sg-swatch-hex">#d6ecf8</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#fff8f4; border:1px solid rgba(255,255,255,0.1);"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Cloud White</span>
+          <span class="sg-swatch-var">--color-cloud-white</span>
+          <span class="sg-swatch-hex">#fff8f4</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#fef3ec;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Text Light</span>
+          <span class="sg-swatch-var">--color-text-primary</span>
+          <span class="sg-swatch-hex">#fef3ec</span>
+        </div>
+      </div>
+      <div class="sg-swatch">
+        <div class="sg-swatch-block" style="background:#c8b8d0;"></div>
+        <div class="sg-swatch-info">
+          <span class="sg-swatch-name">Text Muted</span>
+          <span class="sg-swatch-var">--color-text-muted</span>
+          <span class="sg-swatch-hex">#c8b8d0</span>
+        </div>
+      </div>
+    </div>
+
+    <span class="sg-label" style="margin-top:var(--space-6); display:block;">Gradient Presets</span>
+    <div class="sg-gradient-grid">
+      <div>
+        <div class="sg-gradient-block" style="background:linear-gradient(135deg,#ffd580,#e89ab5,#9bc8e8);"></div>
+        <span class="sg-token-name">--gradient-brand</span>
+      </div>
+      <div>
+        <div class="sg-gradient-block" style="background:linear-gradient(135deg,#ffd580,#e89ab5);"></div>
+        <span class="sg-token-name">--gradient-warm</span>
+      </div>
+      <div>
+        <div class="sg-gradient-block" style="background:linear-gradient(90deg,#c45c7a,#ffd580,#9bc8e8);"></div>
+        <span class="sg-token-name">--gradient-progress</span>
+      </div>
+      <div>
+        <div class="sg-gradient-block" style="background:linear-gradient(to bottom,#e84040,transparent);"></div>
+        <span class="sg-token-name">--gradient-thread</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. Typography ──────────────────────────────────────────── -->
+  <section class="sg-section reveal">
+    <div class="sg-section-header">
+      <span class="sg-section-num">02</span>
+      <h2 class="sg-section-title">Typography</h2>
+      <span class="sg-section-desc">Georgia serif · weight 400 only</span>
+    </div>
+
+    <span class="sg-label">Fluid Type Scale (clamp — resize window to see)</span>
+
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-fluid-h1-lg</span><br>
+        <span class="sg-token-value">clamp(2.8rem, 8vw, 7rem)</span>
+      </div>
+      <div class="sg-type-sample" style="font-size:var(--text-fluid-h1-lg); line-height:var(--leading-tight);">Musubu</div>
+    </div>
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-fluid-h1-sm</span><br>
+        <span class="sg-token-value">clamp(2.4rem, 7vw, 5.5rem)</span>
+      </div>
+      <div class="sg-type-sample" style="font-size:var(--text-fluid-h1-sm); line-height:var(--leading-snug);">About Musubu</div>
+    </div>
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-fluid-h2</span><br>
+        <span class="sg-token-value">clamp(1.8rem, 4vw, 2.8rem)</span>
+      </div>
+      <div class="sg-type-sample" style="font-size:var(--text-fluid-h2); line-height:var(--leading-normal);">Where the sky remembers</div>
+    </div>
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-fluid-h3</span><br>
+        <span class="sg-token-value">clamp(1.6rem, 3.5vw, 2.4rem)</span>
+      </div>
+      <div class="sg-type-sample" style="font-size:var(--text-fluid-h3);">A word woven into the sky</div>
+    </div>
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-fluid-quote</span><br>
+        <span class="sg-token-value">clamp(1.2rem, 2.5vw, 1.65rem)</span>
+      </div>
+      <div class="sg-type-sample muted" style="font-size:var(--text-fluid-quote); font-style:italic; line-height:var(--leading-loose);">"The light of a star you see tonight left its source a thousand years ago."</div>
+    </div>
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-fluid-subhead</span><br>
+        <span class="sg-token-value">clamp(1rem, 2.5vw, 1.4rem)</span>
+      </div>
+      <div class="sg-type-sample muted" style="font-size:var(--text-fluid-subhead); font-style:italic; line-height:var(--leading-copy);">Two souls, separated by time and distance — bound by an invisible red thread.</div>
+    </div>
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-xl / --text-lg</span><br>
+        <span class="sg-token-value">1.08rem — 1rem body</span>
+      </div>
+      <div class="sg-type-sample muted" style="font-size:var(--text-xl); line-height:var(--leading-wide);">Musubu was built from that feeling — the quiet certainty that somewhere, someone is looking at the same light, breathing the same dusk air.</div>
+    </div>
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-base</span><br>
+        <span class="sg-token-value">0.85rem — UI / labels</span>
+      </div>
+      <div class="sg-type-sample" style="font-size:var(--text-base); letter-spacing:var(--tracking-widest-5); text-transform:uppercase;">Begin the Journey</div>
+    </div>
+    <div class="sg-type-row">
+      <div class="sg-type-meta">
+        <span class="sg-token-name">--text-sm / --text-xs</span><br>
+        <span class="sg-token-value">0.75rem — 0.7rem</span>
+      </div>
+      <div class="sg-type-sample muted" style="font-size:var(--text-xs); letter-spacing:var(--tracking-widest-9); text-transform:uppercase;">むすぶ · to tie · to connect</div>
+    </div>
+
+    <span class="sg-label" style="margin-top:var(--space-8); display:block;">Letter Spacing Scale</span>
+    <div class="sg-tracking-grid">
+      <div class="sg-tracking-item">
+        <span class="sg-tracking-sample" style="letter-spacing:var(--tracking-tighter);">Hero Title</span>
+        <span class="sg-token-name">--tracking-tighter</span>
+        <span class="sg-token-value"> -0.01em</span>
+      </div>
+      <div class="sg-tracking-item">
+        <span class="sg-tracking-sample" style="letter-spacing:var(--tracking-widest-4);">CTA Button</span>
+        <span class="sg-token-name">--tracking-widest-4</span>
+        <span class="sg-token-value"> 0.18em</span>
+      </div>
+      <div class="sg-tracking-item">
+        <span class="sg-tracking-sample" style="letter-spacing:var(--tracking-widest-6);">Nav Links</span>
+        <span class="sg-token-name">--tracking-widest-6</span>
+        <span class="sg-token-value"> 0.25em</span>
+      </div>
+      <div class="sg-tracking-item">
+        <span class="sg-tracking-sample" style="letter-spacing:var(--tracking-widest-8);">Eyebrow</span>
+        <span class="sg-token-name">--tracking-widest-8</span>
+        <span class="sg-token-value"> 0.40em</span>
+      </div>
+      <div class="sg-tracking-item">
+        <span class="sg-tracking-sample" style="letter-spacing:var(--tracking-logo);">Kana Logo</span>
+        <span class="sg-token-name">--tracking-logo</span>
+        <span class="sg-token-value"> 0.50em</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. Spacing ─────────────────────────────────────────────── -->
+  <section class="sg-section reveal">
+    <div class="sg-section-header">
+      <span class="sg-section-num">03</span>
+      <h2 class="sg-section-title">Spacing</h2>
+      <span class="sg-section-desc">4px base unit · Tailwind-style scale</span>
+    </div>
+    <div class="sg-spacing-list">
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">2px</span>
+          <span class="sg-spacing-var">--space-0-5</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:2px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">4px</span>
+          <span class="sg-spacing-var">--space-1</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:4px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">8px</span>
+          <span class="sg-spacing-var">--space-2</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:8px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">12px</span>
+          <span class="sg-spacing-var">--space-3</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:12px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">16px</span>
+          <span class="sg-spacing-var">--space-4</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:16px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">24px</span>
+          <span class="sg-spacing-var">--space-6 · --padding-page-x</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:24px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">32px</span>
+          <span class="sg-spacing-var">--space-8</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:32px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">40px</span>
+          <span class="sg-spacing-var">--space-10 · --padding-page-x-lg</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:40px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">48px</span>
+          <span class="sg-spacing-var">--space-12</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:48px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">60px</span>
+          <span class="sg-spacing-var">--space-15 · footer-top</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:60px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">80px</span>
+          <span class="sg-spacing-var">--space-20 · --padding-section</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:80px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">100px</span>
+          <span class="sg-spacing-var">--space-25</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:100px;"></div></div>
+      </div>
+      <div class="sg-spacing-row">
+        <div class="sg-spacing-meta">
+          <span class="sg-spacing-px">120px</span>
+          <span class="sg-spacing-var">--space-30 · --padding-section-lg</span>
+        </div>
+        <div class="sg-spacing-bar-wrap"><div class="sg-spacing-bar" style="width:120px;"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4. Border Radius ───────────────────────────────────────── -->
+  <section class="sg-section reveal">
+    <div class="sg-section-header">
+      <span class="sg-section-num">04</span>
+      <h2 class="sg-section-title">Border Radius</h2>
+    </div>
+    <div class="sg-radius-grid">
+      <div class="sg-radius-item">
+        <div class="sg-radius-box" style="border-radius:var(--radius-none);"></div>
+        <span class="sg-token-name">--radius-none</span>
+        <span class="sg-token-value">0px</span>
+      </div>
+      <div class="sg-radius-item">
+        <div class="sg-radius-box" style="border-radius:var(--radius-xs);"></div>
+        <span class="sg-token-name">--radius-xs</span>
+        <span class="sg-token-value">2px</span>
+      </div>
+      <div class="sg-radius-item">
+        <div class="sg-radius-box" style="border-radius:var(--radius-sm);"></div>
+        <span class="sg-token-name">--radius-sm</span>
+        <span class="sg-token-value">12px · grid items</span>
+      </div>
+      <div class="sg-radius-item">
+        <div class="sg-radius-box" style="border-radius:var(--radius-md);"></div>
+        <span class="sg-token-name">--radius-md</span>
+        <span class="sg-token-value">14px · lightbox</span>
+      </div>
+      <div class="sg-radius-item">
+        <div class="sg-radius-box" style="border-radius:var(--radius-lg);"></div>
+        <span class="sg-token-name">--radius-lg</span>
+        <span class="sg-token-value">16px · cards</span>
+      </div>
+      <div class="sg-radius-item">
+        <div class="sg-radius-box" style="border-radius:var(--radius-xl);"></div>
+        <span class="sg-token-name">--radius-xl</span>
+        <span class="sg-token-value">50px · pill buttons</span>
+      </div>
+      <div class="sg-radius-item">
+        <div class="sg-radius-box" style="border-radius:var(--radius-arch); width:80px; height:110px;"></div>
+        <span class="sg-token-name">--radius-arch</span>
+        <span class="sg-token-value">120px · arch window</span>
+      </div>
+      <div class="sg-radius-item">
+        <div class="sg-radius-box" style="border-radius:var(--radius-full);"></div>
+        <span class="sg-token-name">--radius-full</span>
+        <span class="sg-token-value">9999px · circles</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5. Shadows ────────────────────────────────────────────── -->
+  <section class="sg-section reveal">
+    <div class="sg-section-header">
+      <span class="sg-section-num">05</span>
+      <h2 class="sg-section-title">Shadows</h2>
+      <span class="sg-section-desc">All glow-based — no hard drop shadows</span>
+    </div>
+    <div class="sg-shadow-grid">
+      <div class="sg-shadow-item" style="box-shadow:var(--shadow-gold-sm);">
+        <span class="sg-token-name" style="text-align:center;">--shadow-gold-sm</span>
+        <span class="sg-token-value" style="text-align:center;">back-to-top hover</span>
+      </div>
+      <div class="sg-shadow-item" style="box-shadow:var(--shadow-gold-md);">
+        <span class="sg-token-name" style="text-align:center;">--shadow-gold-md</span>
+        <span class="sg-token-value" style="text-align:center;">CTA hover</span>
+      </div>
+      <div class="sg-shadow-item" style="box-shadow:var(--shadow-magenta-sm);">
+        <span class="sg-token-name" style="text-align:center;">--shadow-magenta-sm</span>
+        <span class="sg-token-value" style="text-align:center;">gallery card hover</span>
+      </div>
+      <div class="sg-shadow-item" style="box-shadow:var(--shadow-card-hover);">
+        <span class="sg-token-name" style="text-align:center;">--shadow-card-hover</span>
+        <span class="sg-token-value" style="text-align:center;">composite card</span>
+      </div>
+      <div class="sg-shadow-item" style="box-shadow:var(--shadow-hero-frame);">
+        <span class="sg-token-name" style="text-align:center;">--shadow-hero-frame</span>
+        <span class="sg-token-value" style="text-align:center;">arch window</span>
+      </div>
+      <div class="sg-shadow-item" style="box-shadow:var(--shadow-sky-sm);">
+        <span class="sg-token-name" style="text-align:center;">--shadow-sky-sm</span>
+        <span class="sg-token-value" style="text-align:center;">about card hover</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. Breakpoints ────────────────────────────────────────── -->
+  <section class="sg-section reveal">
+    <div class="sg-section-header">
+      <span class="sg-section-num">06</span>
+      <h2 class="sg-section-title">Breakpoints</h2>
+      <span class="sg-section-desc">Mobile-first · 8 breakpoints</span>
+    </div>
+    <table class="sg-bp-table">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>Width</th>
+          <th>Usage</th>
+          <th class="sg-bp-bar-cell">Relative scale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>--bp-xs</td>
+          <td>400px</td>
+          <td>Gallery: 2-col grid · Hero CTA padding</td>
+          <td class="sg-bp-bar-cell"><div class="sg-bp-bar-bg"><div class="sg-bp-bar-fill" style="width:36%;"></div></div></td>
+        </tr>
+        <tr>
+          <td>--bp-sm</td>
+          <td>460px</td>
+          <td>About stats column · small button padding</td>
+          <td class="sg-bp-bar-cell"><div class="sg-bp-bar-bg"><div class="sg-bp-bar-fill" style="width:42%;"></div></div></td>
+        </tr>
+        <tr>
+          <td>--bp-sm2</td>
+          <td>480px</td>
+          <td>Nav: gap reduce</td>
+          <td class="sg-bp-bar-cell"><div class="sg-bp-bar-bg"><div class="sg-bp-bar-fill" style="width:44%;"></div></div></td>
+        </tr>
+        <tr>
+          <td>--bp-md</td>
+          <td>620px</td>
+          <td>Gallery: 3-col grid</td>
+          <td class="sg-bp-bar-cell"><div class="sg-bp-bar-bg"><div class="sg-bp-bar-fill" style="width:56%;"></div></div></td>
+        </tr>
+        <tr>
+          <td>--bp-md2</td>
+          <td>680px</td>
+          <td>About cards: 1-col · footer wrap</td>
+          <td class="sg-bp-bar-cell"><div class="sg-bp-bar-bg"><div class="sg-bp-bar-fill" style="width:62%;"></div></div></td>
+        </tr>
+        <tr>
+          <td>--bp-lg</td>
+          <td>720px</td>
+          <td>About section: 1-col · visual frame resize</td>
+          <td class="sg-bp-bar-cell"><div class="sg-bp-bar-bg"><div class="sg-bp-bar-fill" style="width:65%;"></div></div></td>
+        </tr>
+        <tr>
+          <td>--bp-xl</td>
+          <td>880px</td>
+          <td>Gallery: 4-col grid · section padding reduce</td>
+          <td class="sg-bp-bar-cell"><div class="sg-bp-bar-bg"><div class="sg-bp-bar-fill" style="width:80%;"></div></div></td>
+        </tr>
+        <tr>
+          <td>--bp-2xl</td>
+          <td>1100px</td>
+          <td>Gallery: 5-col grid</td>
+          <td class="sg-bp-bar-cell"><div class="sg-bp-bar-bg"><div class="sg-bp-bar-fill" style="width:100%;"></div></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── 7. Transitions ─────────────────────────────────────────── -->
+  <section class="sg-section reveal">
+    <div class="sg-section-header">
+      <span class="sg-section-num">07</span>
+      <h2 class="sg-section-title">Transitions</h2>
+      <span class="sg-section-desc">Hover the dots to feel each duration</span>
+    </div>
+    <div class="sg-duration-grid">
+      <div class="sg-duration-item">
+        <div class="sg-duration-dot" style="transition:transform var(--duration-fast) var(--ease-default), background var(--duration-fast);"></div>
+        <span class="sg-token-name">--duration-fast</span>
+        <span class="sg-token-value">0.3s</span>
+      </div>
+      <div class="sg-duration-item">
+        <div class="sg-duration-dot" style="transition:transform var(--duration-base) var(--ease-default), background var(--duration-base);"></div>
+        <span class="sg-token-name">--duration-base</span>
+        <span class="sg-token-value">0.4s</span>
+      </div>
+      <div class="sg-duration-item">
+        <div class="sg-duration-dot" style="transition:transform var(--duration-slow) var(--ease-smooth), background var(--duration-slow);"></div>
+        <span class="sg-token-name">--duration-slow</span>
+        <span class="sg-token-value">0.45s ease-smooth</span>
+      </div>
+      <div class="sg-duration-item">
+        <div class="sg-duration-dot" style="transition:transform var(--duration-slower) var(--ease-smooth), background var(--duration-slower);"></div>
+        <span class="sg-token-name">--duration-slower</span>
+        <span class="sg-token-value">0.55s ease-smooth</span>
+      </div>
+      <div class="sg-duration-item">
+        <div class="sg-duration-dot" style="transition:transform var(--duration-reveal) var(--ease-default), background var(--duration-reveal);"></div>
+        <span class="sg-token-name">--duration-reveal</span>
+        <span class="sg-token-value">0.9s · scroll reveal</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8. Components ──────────────────────────────────────────── -->
+  <section class="sg-section reveal">
+    <div class="sg-section-header">
+      <span class="sg-section-num">08</span>
+      <h2 class="sg-section-title">Components</h2>
+      <span class="sg-section-desc">Live interactive previews</span>
+    </div>
+
+    <span class="sg-label">Buttons</span>
+    <div class="sg-component-row">
+      <a href="#" class="sg-btn-primary">Begin the Journey</a>
+      <a href="#" class="sg-btn-secondary">Return to the Sky</a>
+    </div>
+
+    <span class="sg-label" style="margin-top:var(--space-6); display:block;">Input</span>
+    <div class="sg-component-row">
+      <input class="sg-input" type="text" placeholder="Search by name…" />
+    </div>
+
+    <span class="sg-label" style="margin-top:var(--space-6); display:block;">Content Card</span>
+    <div class="sg-component-row">
+      <div class="sg-card">
+        <span style="font-size:2rem; color:var(--color-sky); filter:drop-shadow(0 0 8px var(--color-sky));">空</span>
+        <p style="font-size:var(--text-sm); letter-spacing:var(--tracking-widest-6); text-transform:uppercase; color:var(--color-cloud-white); margin:var(--space-3) 0 var(--space-3); opacity:0.85;">Sky</p>
+        <p style="font-size:var(--text-body); line-height:var(--leading-copy); color:var(--color-text-muted); font-style:italic;">Every sky is shared. The light that reaches you has touched someone else first.</p>
+      </div>
+    </div>
+
+    <span class="sg-label" style="margin-top:var(--space-6); display:block;">Navigation Bar</span>
+    <div class="sg-nav-preview">
+      <span style="font-size:1.1rem; letter-spacing:0.2em; color:var(--color-cloud-white); text-shadow:0 0 16px rgba(244,184,122,0.5);">結 &nbsp;Musubu</span>
+      <div style="display:flex; gap:28px;">
+        <span style="font-size:0.75rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--color-gold);">Home</span>
+        <span style="font-size:0.75rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--color-text-muted); opacity:0.65;">About</span>
+        <span style="font-size:0.75rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--color-text-muted); opacity:0.65;">Gallery</span>
+        <span style="font-size:0.75rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--color-text-muted); opacity:0.65;">Play</span>
+      </div>
+    </div>
+
+    <span class="sg-label" style="margin-top:var(--space-6); display:block;">Scroll Progress Bar</span>
+    <div style="height:2px; background:var(--gradient-progress); border-radius:var(--radius-xs); width:60%; opacity:0.8;"></div>
+  </section>
+
+</div><!-- /.sg-page -->
+
+<!-- ═══════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">結 &nbsp;Musubu</div>
+  <p class="footer-tagline">"Even if we forget each other's names, the thread remains."</p>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="memory.html">Play</a></li>
+  </ul>
+  <p class="footer-copy">&copy; 2026 Musubu. Crafted with longing, at dusk.</p>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>
